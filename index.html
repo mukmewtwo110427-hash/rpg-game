@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>별빛의 마지막 조각 - 하나의 거대한 세계</title>
+<style>
+:root{--bg:#111321;--panel:#1b2033;--panel2:#252c43;--line:#39425f;--text:#f3f4fb;--muted:#aab3cc;--gold:#f5c86a;--mint:#73e0b1;--red:#ff777e;--blue:#86b9ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#202944 0,#111321 65%);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+button{font:inherit;border:1px solid var(--line);border-radius:11px;padding:10px 13px;color:var(--text);background:#2c3550;cursor:pointer;transition:filter .12s,transform .12s}button:hover{filter:brightness(1.15)}button:active{transform:translateY(1px)}button:disabled{opacity:.38;cursor:not-allowed}
+header{max-width:1250px;margin:auto;padding:18px 20px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}h1{font-size:clamp(20px,3vw,31px);margin:0;letter-spacing:-.7px}header p{margin:4px 0 0;color:var(--muted);font-size:13px}.head-actions{display:flex;gap:8px;flex-wrap:wrap}
+main{max-width:1250px;margin:auto;padding:0 20px 28px;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.85fr);gap:16px}.game-panel,.side-panel{background:linear-gradient(160deg,rgba(35,43,66,.97),rgba(22,27,44,.97));border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 18px 45px #0002}.game-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 15px;border-bottom:1px solid var(--line);background:#ffffff04}.location{font-weight:750}.hint{font-size:12px;color:var(--muted)}.canvas-wrap{position:relative;background:#243b37;line-height:0}canvas{display:block;width:100%;height:auto;image-rendering:pixelated;touch-action:none}#game{width:100%}.minimap{position:absolute;z-index:3;top:10px;left:10px;width:140px!important;height:140px!important;border:2px solid #d9e5ff88;border-radius:50%;background:#10172bdc;box-shadow:0 5px 18px #0007;pointer-events:none;image-rendering:pixelated}.game-bottom{padding:12px 15px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px}.side-panel{padding:15px;display:flex;flex-direction:column;gap:12px}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.stat{background:#ffffff07;border:1px solid #ffffff0c;border-radius:12px;padding:10px}.stat span{display:block;color:var(--muted);font-size:11px}.stat strong{font-size:16px;display:block;margin-top:2px}.meter{height:7px;border-radius:20px;background:#0c1020;overflow:hidden;margin-top:6px}.meter i{display:block;height:100%;border-radius:20px;transition:width .18s}.meter.hp i{background:linear-gradient(90deg,#e85969,#ff8e87)}.meter.mp i{background:linear-gradient(90deg,#588df3,#91c2ff)}.section{border:1px solid #ffffff12;background:#ffffff04;border-radius:13px;padding:12px}.section h2{font-size:14px;margin:0 0 8px;display:flex;justify-content:space-between;align-items:center}.section p{font-size:13px;color:#d4daeb;line-height:1.55;margin:0}.quest-title{color:var(--gold);font-weight:750;margin-bottom:4px}.quest-progress{font-size:12px;color:var(--muted);margin-top:8px}.log{font-size:12px;line-height:1.55;color:#c6cee1;max-height:116px;overflow:auto}.log div{padding:3px 0;border-bottom:1px solid #ffffff09}.inventory{display:flex;gap:6px;flex-wrap:wrap}.chip{font-size:11px;padding:5px 8px;background:#ffffff0a;border:1px solid #ffffff12;border-radius:99px;color:#dce4f7}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions button{font-size:12px;padding:8px 10px}.controls-mobile{display:none;align-items:center;justify-content:center;gap:14px;padding:11px;background:#111729;border-top:1px solid var(--line)}.dpad{display:grid;grid-template-columns:42px 42px 42px;grid-template-rows:37px 37px 37px;gap:4px}.dpad button{padding:0;font-size:19px;border-radius:9px}.dpad .up{grid-column:2}.dpad .left{grid-column:1;grid-row:2}.dpad .center{grid-column:2;grid-row:2;font-size:10px}.dpad .right{grid-column:3;grid-row:2}.dpad .down{grid-column:2;grid-row:3}.mobile-actions{display:grid;grid-template-columns:repeat(2,64px);gap:6px}.mobile-actions button{padding:11px 4px;font-size:12px}.overlay{position:absolute;inset:0;background:#080b16c9;display:flex;align-items:center;justify-content:center;padding:14px;line-height:1.4}.overlay.hidden{display:none}.dialog-card,.battle-card,.start-card{width:min(100%,520px);background:linear-gradient(155deg,#252d45,#151a2b);border:1px solid #687596;border-radius:17px;padding:18px;box-shadow:0 18px 60px #0008}.dialog-card h3,.battle-card h3,.start-card h3{margin:0 0 7px;font-size:20px}.dialog-card p,.battle-card p,.start-card p{margin:0;color:#d2d9e9;line-height:1.65;font-size:14px;white-space:pre-line}.dialog-actions{display:flex;justify-content:flex-end;margin-top:14px}.battle-enemy{display:flex;align-items:center;gap:12px;background:#ffffff08;border-radius:12px;padding:10px;margin:12px 0}.enemy-icon{width:58px;height:58px;display:grid;place-items:center;font-size:34px;background:#0f1424;border-radius:12px}.battle-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.battle-buttons button{font-size:13px}.battle-note{font-size:12px!important;color:var(--muted)!important;margin-top:9px!important}#enemyTraitsText{overflow-wrap:anywhere;font-weight:650}.start-screen{position:fixed;inset:0;z-index:20;background:radial-gradient(ellipse at 50% 20%,#31446b,#111321 65%);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}.start-screen.hidden{display:none}.start-card{width:min(100%,590px);padding:24px;max-height:calc(100vh - 32px);overflow-y:auto}.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:2px;font-size:11px;font-weight:800}.start-card h2{font-size:clamp(29px,6vw,44px);line-height:1.13;margin:7px 0 11px}.start-card ul{color:#d4daeb;font-size:13px;line-height:1.8;padding-left:19px}.start-row{display:flex;gap:8px;margin-top:15px}.start-row input{flex:1;min-width:0;background:#0e1323;border:1px solid var(--line);color:white;border-radius:10px;padding:11px;font:inherit}.job-select{margin:15px 0 8px;padding:12px;border:1px solid #586688;border-radius:13px;background:#0e132355}.job-select label{display:block;font-size:13px;font-weight:800;margin-bottom:7px;color:#f5d98a}.job-select select{width:100%;background:#0e1323;border:1px solid var(--line);color:var(--text);border-radius:10px;padding:11px;font:inherit}.job-select p{font-size:12px!important;line-height:1.55!important;color:#c7d2e8!important;margin-top:8px!important}.job-select .job-traits{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.job-select .job-traits span{font-size:11px;background:#ffffff0b;border:1px solid #ffffff18;border-radius:999px;padding:4px 7px;color:#e5eafa}.small-note{font-size:11px!important;color:var(--muted)!important;margin-top:10px!important}.modal-toast{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#151a2ceb;border:1px solid #8a98bb;padding:8px 12px;border-radius:99px;font-size:12px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s}.modal-toast.show{opacity:1}.footer-note{max-width:1250px;margin:0 auto 18px;padding:0 20px;color:#7f8aa8;font-size:11px}.job-detail{display:flex;align-items:flex-start;gap:10px}.job-detail .job-icon{font-size:28px;line-height:1.2}.job-detail strong{display:block;margin-bottom:3px}.job-detail small{display:block;color:var(--muted);line-height:1.5}
+@media(max-width:850px){main{grid-template-columns:1fr;padding:0 10px 18px;gap:10px}header{padding:13px 12px}header p{max-width:240px}.side-panel{padding:11px;gap:9px}.game-panel,.side-panel{border-radius:14px}.controls-mobile{display:flex}.game-bottom{font-size:11px}.log{max-height:88px}.stat{padding:8px 7px}.stat strong{font-size:14px}}
+@media(max-width:420px){.hint{display:none}.head-actions button{padding:8px;font-size:12px}.stats{gap:5px}.stat strong{font-size:13px}.mobile-actions{grid-template-columns:repeat(2,58px)}.battle-buttons{grid-template-columns:repeat(2,1fr)}}
+
+.avatar-maker{margin:14px 0 8px;padding:13px;border:1px solid #586688;border-radius:14px;background:linear-gradient(145deg,#11182a,#192138)}
+.avatar-maker-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px}.avatar-maker-heading strong{display:block;font-size:14px}.avatar-maker-heading small{display:block;color:var(--muted);font-size:11px;line-height:1.5;margin-top:4px;max-width:330px}
+.avatar-maker-main{display:grid;grid-template-columns:190px minmax(0,1fr);gap:12px;align-items:start}.avatar-preview-box{min-width:0}.avatar-preview-box canvas{width:100%;max-width:190px;height:auto;border:1px solid #536282;border-radius:12px;background:#18243a;image-rendering:pixelated}.avatar-view-buttons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin-top:6px}.avatar-view-buttons button{padding:7px 2px;font-size:11px}.avatar-view-buttons button.view-active{background:#f0cc78;color:#252b3b;border-color:#f0cc78;font-weight:800}
+.avatar-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px}.avatar-fields label{display:flex;flex-direction:column;gap:5px;color:#cdd7ee;font-size:11px}.avatar-fields input[type=color]{width:100%;height:35px;padding:3px;background:#0e1323;border:1px solid var(--line);border-radius:8px}.avatar-fields select{width:100%;min-width:0;background:#0e1323;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px 5px;font:inherit;font-size:11px}.avatar-note{color:var(--muted)!important;font-size:11px!important;line-height:1.5!important;margin:10px 0 0!important}.start-screen:not(.edit-only) #cancelAppearanceBtn{display:none}.start-screen.edit-only .eyebrow,.start-screen.edit-only #startTitle,.start-screen.edit-only #startIntro,.start-screen.edit-only .start-story-list,.start-screen.edit-only .job-select,.start-screen.edit-only .small-note{display:none!important}.start-screen.edit-only #heroName{display:none}.start-screen.edit-only .start-card{width:min(100%,590px)}.start-screen.edit-only .start-row{justify-content:flex-end}.start-screen.edit-only #cancelAppearanceBtn{display:inline-block}.start-screen.edit-only #startBtn{min-width:126px}
+@media(max-width:560px){.start-screen{padding:9px}.start-card{padding:15px}.avatar-maker{padding:10px}.avatar-maker-main{grid-template-columns:145px minmax(0,1fr);gap:9px}.avatar-preview-box canvas{max-width:145px}.avatar-fields{gap:6px}.avatar-fields label{font-size:10px}.avatar-fields input[type=color]{height:31px}.avatar-fields select{font-size:10px;padding:7px 3px}.avatar-maker-heading small{font-size:10px}.avatar-maker-heading .chip{display:none}.avatar-view-buttons button{font-size:10px;padding:6px 1px}}
+@media(max-width:380px){.avatar-maker-main{grid-template-columns:1fr}.avatar-preview-box canvas{max-width:190px;width:190px;display:block;margin:auto}.avatar-view-buttons{max-width:190px;margin:6px auto 0}.avatar-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* Reliable in-game shop: replaces browser prompt dialogs with clickable item cards. */
+.shop-card{width:min(100%,560px);max-height:calc(100% - 8px);overflow:auto;background:linear-gradient(155deg,#252d45,#151a2b);border:1px solid #8090b4;border-radius:17px;padding:16px;box-shadow:0 18px 60px #0009}
+.shop-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:5px}
+.shop-head h3{font-size:21px;margin:0 0 4px}
+.shop-gold{white-space:nowrap;border:1px solid #7f6a36;background:#3c321d;color:#ffdf87;border-radius:999px;padding:6px 10px;font-weight:800;font-size:13px}
+.shop-subtitle{font-size:12px;color:var(--muted);margin:0 0 12px!important}
+.shop-items{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.shop-item{display:flex;flex-direction:column;gap:8px;padding:11px;border:1px solid #ffffff1b;background:#ffffff07;border-radius:12px;min-width:0}
+.shop-item-top{display:flex;gap:9px;align-items:flex-start}
+.shop-item-icon{width:38px;height:38px;flex:0 0 38px;display:grid;place-items:center;background:#ffffff0c;border-radius:10px;font-size:22px}
+.shop-item-name{font-size:14px;font-weight:800;line-height:1.35}
+.shop-item-desc{font-size:12px;color:#bdc8e0;line-height:1.5;margin-top:3px}
+.shop-item-bottom{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:auto}
+.shop-price{font-size:12px;font-weight:800;color:#ffdf87;white-space:nowrap}
+.shop-item button{padding:8px 10px;font-size:12px;min-width:78px}
+.shop-item button:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.5)}
+.shop-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:13px;padding-top:11px;border-top:1px solid #ffffff16}
+.shop-message{font-size:12px;color:#a8ebc9;line-height:1.4}
+@media(max-width:460px){.shop-items{grid-template-columns:1fr}.shop-card{padding:12px}.shop-head h3{font-size:18px}.shop-item{padding:9px}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>🌌 별빛의 마지막 조각</h1><p>하나의 거대한 세계를 자유롭게 탐험하는 판타지 RPG · 키보드 / 모바일 지원</p></div>
+  <div class="head-actions"><button id="appearanceBtn">🎨 외형</button><button id="saveBtn">💾 저장</button><button id="loadBtn">↻ 불러오기</button><button id="resetBtn">새 게임</button></div>
+</header>
+<main>
+  <section class="game-panel">
+    <div class="game-top"><div><div class="location" id="locationName">별빛 마을</div><div class="hint" id="locationHint">E 또는 Space: 조사 / 대화</div></div><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><div class="chip" style="color:#ff9da4;border-color:#a74e62">⚔️ 도전 모드</div><div class="chip" id="chapterChip">프롤로그</div></div></div>
+    <div class="canvas-wrap"><canvas id="game" width="800" height="544" aria-label="RPG 게임 화면"></canvas><canvas id="minimap" class="minimap" width="288" height="288" aria-label="원형 전체 지도 미니맵"></canvas><div id="toast" class="modal-toast"></div>
+      <div id="dialogOverlay" class="overlay hidden"><div class="dialog-card"><h3 id="dialogTitle">대화</h3><p id="dialogText"></p><div class="dialog-actions"><button id="dialogOk">계속</button></div></div></div>
+      <div id="battleOverlay" class="overlay hidden"><div class="battle-card"><div class="eyebrow">TURN BATTLE</div><h3 id="battleTitle">전투</h3><div class="battle-enemy"><div class="enemy-icon" id="enemyEmoji">🟢</div><div style="flex:1"><strong id="enemyName">슬라임</strong><div class="meter hp"><i id="enemyHpBar" style="width:100%"></i></div><div class="hint" id="enemyHpText">HP 20 / 20</div><div class="hint" id="enemyTraitsText" style="margin-top:5px;line-height:1.45;color:#f2d89a">특성 확인 중</div></div></div><p id="battleText">적이 나타났다!</p><div class="battle-buttons"><button id="attackBtn">⚔️ 공격</button><button id="skillBtn">🔥 별빛 베기</button><button id="potionBtn">🧪 회복약</button><button id="defendBtn">🛡️ 방어</button><button id="runBtn">🏃 도망</button><button id="battleCloseBtn" disabled>확인</button></div><p class="battle-note" id="battleNote">행동을 선택하세요.</p></div></div>
+      <div id="shopOverlay" class="overlay hidden" style="z-index:8"><div class="shop-card" role="dialog" aria-modal="true" aria-labelledby="shopTitle"><div class="shop-head"><div><h3 id="shopTitle">🛒 은찬의 상점</h3><p class="shop-subtitle">필요한 물건을 고르고 구매 버튼을 누르세요.</p></div><span class="shop-gold" id="shopGold">50 G</span></div><div id="shopItems" class="shop-items"></div><div class="shop-footer"><span id="shopMessage" class="shop-message" aria-live="polite">구매한 물건은 즉시 적용됩니다.</span><button id="shopCloseBtn" type="button">닫기</button></div></div></div>
+    </div>
+    <div class="controls-mobile"><div class="dpad"><button class="up" data-move="up">▲</button><button class="left" data-move="left">◀</button><button class="center" id="interactMobile">조사</button><button class="right" data-move="right">▶</button><button class="down" data-move="down">▼</button></div><div class="mobile-actions"><button id="potionMobile">🧪 회복약</button><button id="menuMobile">📜 상태</button></div></div>
+    <div class="game-bottom"><span>이동: WASD / 방향키</span><span>조사·대화: E / Space</span><span>원형 세계 지도: 288 × 288 타일 · 왼쪽 위 미니맵</span></div>
+  </section>
+  <aside class="side-panel">
+    <div class="stats">
+      <div class="stat"><span>레벨 · 경험치</span><strong id="levelText">Lv. 1</strong><div class="meter"><i id="xpBar" style="width:0%;background:#f5c86a"></i></div><span id="xpText">0 / 40 XP</span></div>
+      <div class="stat"><span>체력 HP</span><strong id="hpText">100 / 100</strong><div class="meter hp"><i id="hpBar" style="width:100%"></i></div></div>
+      <div class="stat"><span>마나 MP</span><strong id="mpText">25 / 25</strong><div class="meter mp"><i id="mpBar" style="width:100%"></i></div></div>
+    </div>
+    <div class="section"><h2>⚔️ 선택한 직업 <span class="chip" id="jobName">기사</span></h2><div class="job-detail"><div class="job-icon" id="jobIcon">🛡️</div><div><strong id="jobSkill">용맹의 일격</strong><small id="jobSummary">튼튼한 방어구로 피해를 버티는 전사.</small><small id="jobPassive">특성: 받는 피해 10% 감소</small></div></div></div><div class="section"><h2>📖 현재 퀘스트 <span class="chip" id="questTag">메인</span></h2><div class="quest-title" id="questTitle">이야기의 시작</div><p id="questDesc">마을 촌장과 대화해 보자.</p><div class="quest-progress" id="questProgress">진행도: 0%</div></div>
+    <div class="section"><h2>🎒 소지품 <span class="chip" id="goldText">0 G</span></h2><div class="inventory" id="inventory"></div><div class="actions" style="margin-top:9px"><button id="shopBtn">🛒 상점</button><button id="statusBtn">📊 능력치</button><button id="restBtn">🛏️ 휴식</button></div></div>
+    <div class="section"><h2>🗺️ 모험 기록 <span class="chip" id="enemyCount">처치 0</span></h2><div class="log" id="log"></div></div>
+    <div class="section"><h2>💡 플레이 팁</h2><p id="tipText">사람 옆에서 E 키를 눌러 대화하고, 반짝이는 약초와 상자를 조사하세요. 적에게 부딪히면 전투가 시작됩니다.</p></div>
+  </aside>
+</main>
+<div class="footer-note">이 파일은 별도 설치 없이 브라우저에서 실행됩니다. 진행 상황은 이 기기의 브라우저 저장소에 저장할 수 있습니다.</div>
+<div id="startScreen" class="start-screen"><div class="start-card"><div class="eyebrow">A SMALL FANTASY RPG</div><h2 id="startTitle">별빛의 마지막 조각</h2><p id="startIntro">별의 심장이 산산이 흩어졌다. 어둠이 마을을 삼키기 전에, 용기를 내어 하나로 이어진 여섯 지역을 탐험하고 별빛을 되찾아라.</p><ul class="start-story-list"><li>마을의 인물들과 대화하며 단서를 얻기</li><li>숲과 동굴을 탐험하고 몬스터와 턴제 전투</li><li>장비 구매, 회복약, 레벨업으로 강해지기</li><li>상점에서 풍령 부츠와 탑승 펫을 구매해 더 빠르게 이동하고, 120G 무기·방어구 뽑기에서 특수 효과가 있는 희귀 장비를 노리기</li><li>숨겨진 상자와 보조 의뢰까지 도전하기</li><li>288 × 288 타일의 거대한 원형 세계와 미니맵 속 비밀 장소 탐험하기</li><li><b>도전 모드:</b> 강력해진 적과 보스, 강화된 보상</li><li>기사·마도사·암살자·성직자 중 직업을 선택하세요.</li><li>피부색·머리색·옷·헤어스타일·장식을 직접 꾸미고 네 방향을 미리 볼 수 있어요.</li><li>도전 모드 조정: 공격·방어·체력·회복량과 레벨업 성장이 감소했습니다.</li><li>회복약은 최대 HP의 30%와 MP 3을 회복합니다. 성직자는 시작 최대 HP가 145이고 레벨업마다 HP가 13 증가하며, 회복약 효과가 25% 증가합니다.</li><li>방어 행동은 방어력을 높이고 받는 피해를 30% 줄이며, 적의 행동 3턴 동안 유지됩니다.</li></ul><div class="job-select"><label for="heroJob">⚔️ 모험가 직업 선택</label><select id="heroJob"><option value="knight">🛡️ 기사 — 높은 체력과 방어력</option><option value="mage">🔮 마도사 — 강력한 마법과 많은 마나</option><option value="assassin">🗡️ 암살자 — 높은 공격력과 치명타</option><option value="cleric">✨ 성직자 — 강화된 체력과 회복 기술</option></select><p id="jobDescription">튼튼한 방어구로 적의 공격을 견디는 전사. 기술: 용맹의 일격.</p><div class="job-traits" id="jobTraits"><span>높은 HP</span><span>높은 방어력</span><span>피해 10% 감소</span></div></div>
+<div class="avatar-maker" id="avatarMaker">
+  <div class="avatar-maker-heading"><div><strong>🎨 내 캐릭터 꾸미기</strong><small>색상과 헤어스타일을 고른 뒤 방향 버튼으로 앞·왼쪽·오른쪽·뒷모습을 확인하세요.</small></div><span class="chip" id="avatarViewLabel">앞모습</span></div>
+  <div class="avatar-maker-main">
+    <div class="avatar-preview-box"><canvas id="avatarPreview" width="190" height="190" aria-label="캐릭터 외형 미리보기"></canvas>
+      <div class="avatar-view-buttons"><button type="button" data-preview-facing="down" class="view-active">앞</button><button type="button" data-preview-facing="left">왼쪽</button><button type="button" data-preview-facing="right">오른쪽</button><button type="button" data-preview-facing="up">뒤</button></div>
+    </div>
+    <div class="avatar-fields">
+      <label class="color-field">피부색 <input id="heroSkin" type="color" value="#efc39e" /></label>
+      <label class="color-field">머리색 <input id="heroHair" type="color" value="#493126" /></label>
+      <label class="color-field">상의 색 <input id="heroOutfit" type="color" value="#6f9fe6" /></label>
+      <label class="color-field">바지 색 <input id="heroPants" type="color" value="#273e68" /></label>
+      <label>헤어스타일<select id="heroHairStyle"><option value="short">짧은 머리</option><option value="spiky">뾰족한 머리</option><option value="long">긴 머리</option><option value="ponytail">묶은 머리</option><option value="bald">민머리</option></select></label>
+      <label>장식<select id="heroAccessory"><option value="none">없음</option><option value="headband">머리띠</option><option value="crown">작은 왕관</option><option value="glasses">안경</option></select></label>
+    </div>
+  </div>
+  <p class="avatar-note">선택한 외형은 게임 안에서도 유지됩니다. 이동하면 캐릭터가 걷는 방향에 맞춰 자동으로 좌우·앞·뒤를 바라봅니다.</p>
+</div>
+<div class="start-row"><input id="heroName" maxlength="12" placeholder="모험가 이름 (예: 루나)" value="루나" /><button id="cancelAppearanceBtn" type="button">취소</button><button id="startBtn">모험 시작</button></div><p class="small-note">메인 스토리와 보조 의뢰, 상자 찾기, 지역별 전투를 모두 즐기도록 약 1시간 플레이를 목표로 구성했습니다. 실제 시간은 플레이 방식에 따라 달라집니다.</p></div></div>
+<script>
+(()=>{'use strict';
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
+const miniCanvas=document.getElementById('minimap'),miniCtx=miniCanvas.getContext('2d');
+const TILE=32, COLS=64, ROWS=42, MID_Y=Math.floor(ROWS/2), SCALE_X=(COLS-2)/32, SCALE_Y=(ROWS-2)/20;
+const WORLD_COLS=288, WORLD_ROWS=288, WORLD_RADIUS=139;
+const $=id=>document.getElementById(id);
+const maps={
+ village:{name:'별빛 마을',base:'#6b9b67',path:'#b5a078',blocked:[],structures:[{x:3,y:3,w:5,h:4,type:'house',color:'#d69c6a'},{x:10,y:2,w:5,h:5,type:'house',color:'#bd7c69'},{x:23,y:3,w:5,h:4,type:'house',color:'#d6bd7a'},{x:5,y:16,w:5,h:3,type:'house',color:'#ba8a62'}],decor:[],gateLabel:'숲으로'},
+ forest:{name:'속삭임 숲',base:'#39764d',path:'#b1a16d',blocked:[],structures:[],decor:[],gateLabel:'동굴로'},
+ cave:{name:'수정 동굴',base:'#474b63',path:'#777d91',blocked:[],structures:[],decor:[],gateLabel:'고대 유적으로'},
+ ruins:{name:'잊힌 유적',base:'#777858',path:'#b9ad8c',blocked:[],structures:[],decor:[],gateLabel:'별의 성소로'},
+ sanctum:{name:'별의 성소',base:'#353b65',path:'#666b9b',blocked:[],structures:[],decor:[],gateLabel:'최종 장소'},
+ marsh:{name:'저주받은 습지',base:'#36594f',path:'#8e8a69',blocked:[],structures:[],decor:[],gateLabel:'탐험 지역'}
+};
+function makeMapData(){
+ // Nature obstacles are placed away from each region's central travel lane.
+ const forestTrees=[];for(let y=2;y<20;y+=3){for(let x=2+(y%2);x<32;x+=4){if(Math.abs(y-11)>2 && Math.abs(x-16)>2)forestTrees.push({x,y,w:1,h:1,type:'tree'});}}
+ forestTrees.push(...[{x:5,y:6,w:1,h:1,type:'tree'},{x:8,y:15,w:1,h:1,type:'tree'},{x:13,y:4,w:1,h:1,type:'tree'},{x:19,y:16,w:1,h:1,type:'tree'},{x:25,y:6,w:1,h:1,type:'tree'},{x:28,y:15,w:1,h:1,type:'tree'}]);
+ const caveRocks=[];for(let y=3;y<20;y+=4){for(let x=4+(y%3);x<30;x+=5){if(Math.abs(y-11)>1)caveRocks.push({x,y,w:1,h:1,type:'rock'});}}
+ const ruinPillars=[{x:5,y:5,w:1,h:2,type:'pillar'},{x:10,y:14,w:1,h:2,type:'pillar'},{x:15,y:4,w:1,h:2,type:'pillar'},{x:20,y:14,w:1,h:2,type:'pillar'},{x:26,y:5,w:1,h:2,type:'pillar'},{x:27,y:15,w:1,h:2,type:'pillar'}];
+ const sanctumPillars=[{x:5,y:4,w:1,h:3,type:'pillar'},{x:5,y:15,w:1,h:3,type:'pillar'},{x:12,y:4,w:1,h:2,type:'pillar'},{x:12,y:16,w:1,h:2,type:'pillar'},{x:21,y:4,w:1,h:2,type:'pillar'},{x:21,y:16,w:1,h:2,type:'pillar'},{x:28,y:4,w:1,h:3,type:'pillar'},{x:28,y:15,w:1,h:3,type:'pillar'}];
+ maps.forest.structures=forestTrees;maps.cave.structures=caveRocks;maps.ruins.structures=ruinPillars;maps.sanctum.structures=sanctumPillars;
+}
+makeMapData();
+const JOBS={
+ knight:{id:'knight',name:'기사',emoji:'🛡️',description:'튼튼하지만 이제는 방어와 회복 타이밍이 중요해진 전사.',passive:'받는 피해 10% 감소',skillName:'용맹의 일격',skillCost:8,maxHp:150,maxMp:24,atk:15,def:10,growth:{hp:13,mp:3,atk:2,def:1},traits:['높은 HP','높은 방어력','피해 10% 감소']},
+ mage:{id:'mage',name:'마도사',emoji:'🔮',description:'강한 마법을 쓰지만 체력과 마나를 신중하게 관리해야 하는 주문사.',passive:'기술이 적 방어력의 60%만 적용',skillName:'아케인 버스트',skillCost:12,maxHp:100,maxMp:58,atk:12,def:4,growth:{hp:8,mp:8,atk:3,def:1},traits:['높은 MP','강력한 마법','방어가 약함']},
+ assassin:{id:'assassin',name:'암살자',emoji:'🗡️',description:'공격력은 높지만 체력과 방어력이 낮은 전투원.',passive:'일반 공격 치명타 15% · 기술 치명타 30%',skillName:'그림자 연격',skillCost:9,maxHp:112,maxMp:32,atk:19,def:5,growth:{hp:9,mp:4,atk:4,def:1},traits:['높은 공격력','확률형 치명타','방어가 약함']},
+ cleric:{id:'cleric',name:'성직자',emoji:'✨',description:'체력이 강화되어 더 오래 버티면서 회복과 공격을 함께하는 지원형 전사.',passive:'회복약 효과 25% 증가 · 기술 사용 시 HP 회복',skillName:'성광 심판',skillCost:11,maxHp:145,maxMp:45,atk:13,def:8,growth:{hp:13,mp:6,atk:2,def:1},traits:['강화된 HP','회복 능력','마나 관리 필요']}
+};
+const state={worldVersion:6,name:'루나',job:'knight',appearance:{skin:'#efc39e',hair:'#493126',outfit:'#6f9fe6',pants:'#273e68',hairstyle:'short',accessory:'none'},facing:'down',map:'world',x:144,y:144,level:1,xp:0,maxHp:180,hp:180,maxMp:28,mp:28,atk:19,def:13,gold:50,potions:3,herbs:0,ores:0,crystals:0,story:0,herbsGathered:0,slimesDefeated:0,oreGathered:0,sealCount:0,defeated:{},opened:{},harvested:{},flags:{crystal:false,golem:false,guardian:false,boss:false},side:{herbDone:false,huntDone:false,exploreDone:false},bestiary:{},explorationFinds:0,totalKills:0,stepsSinceEncounter:0,randomCounter:0,visited:{village:true},log:[],inCombat:false,enemy:null,guarding:false,guardTurns:0,guardBonus:0,turn:0,poisonTurns:0,poisonDamage:0,boots:false,mount:false,gachaWeaponBonus:0,gachaWeaponName:'',gachaArmorBonus:0,gachaArmorName:'',gachaArmorLastStandUsed:false};
+const npcData={
+ village:[{id:'elder',x:13,y:12,name:'촌장 김산',emoji:'🧙',color:'#e0c17d'},{id:'herbalist',x:8,y:12,name:'약초사 정결',emoji:'👨‍🌾',color:'#78b88a'},{id:'merchant',x:20,y:12,name:'상인 은찬',emoji:'🧑‍💼',color:'#efb5a2'},{id:'guard',x:17,y:9,name:'경비병 전태영',emoji:'🛡️',color:'#9fc4ff'}],
+ forest:[{id:'ranger',x:16,y:8,name:'숲의 길잡이',emoji:'🏹',color:'#94e6a5'}],
+ cave:[{id:'miner',x:5,y:10,name:'길 잃은 광부',emoji:'⛏️',color:'#d0c8b6'}],
+ ruins:[{id:'ghost',x:17,y:8,name:'유적의 기억',emoji:'👻',color:'#bfc7ff'}],sanctum:[],
+ marsh:[{id:'hermit',x:18,y:10,name:'늪지의 은둔자',emoji:'🧙‍♂️',color:'#9dd0b2'}]};
+const nodes={
+ forest:[{id:'herb1',x:5,y:10,type:'herb',emoji:'🌿'},{id:'herb2',x:8,y:7,type:'herb',emoji:'🌿'},{id:'herb3',x:11,y:14,type:'herb',emoji:'🌿'},{id:'herb4',x:15,y:5,type:'herb',emoji:'🌿'},{id:'herb5',x:19,y:13,type:'herb',emoji:'🌿'},{id:'herb6',x:23,y:8,type:'herb',emoji:'🌿'},{id:'herb7',x:27,y:14,type:'herb',emoji:'🌿'},{id:'herb8',x:30,y:7,type:'herb',emoji:'🌿'},{id:'chestF',x:25,y:4,type:'chest',emoji:'📦'}],
+ cave:[{id:'ore1',x:6,y:6,type:'ore',emoji:'💎'},{id:'ore2',x:9,y:15,type:'ore',emoji:'💎'},{id:'ore3',x:13,y:7,type:'ore',emoji:'💎'},{id:'ore4',x:17,y:15,type:'ore',emoji:'💎'},{id:'ore5',x:22,y:6,type:'ore',emoji:'💎'},{id:'ore6',x:29,y:15,type:'ore',emoji:'💎'},{id:'chestC',x:27,y:4,type:'chest',emoji:'📦'},{id:'moonCrystal',x:28,y:9,type:'crystal',emoji:'🔷'}],
+ ruins:[{id:'seal1',x:8,y:8,type:'seal',emoji:'🔮'},{id:'seal2',x:17,y:15,type:'seal',emoji:'🔮'},{id:'seal3',x:25,y:7,type:'seal',emoji:'🔮'},{id:'chestR',x:5,y:16,type:'chest',emoji:'📦'}],
+ sanctum:[{id:'chestS',x:4,y:11,type:'chest',emoji:'📦'}],
+ marsh:[{id:'marshHerb1',x:6,y:8,type:'herb',emoji:'🌿'},{id:'marshHerb2',x:15,y:16,type:'herb',emoji:'🌿'},{id:'marshArtifact1',x:28,y:7,type:'artifact',emoji:'🏺'},{id:'marshChest1',x:29,y:16,type:'chest',emoji:'🎁'},{id:'marshSpring',x:23,y:10,type:'spring',emoji:'💧'}]
+};
+const enemyDefs={
+ forest:[{id:'slimeA',name:'김아빈의 풀잎 슬라임',emoji:'🟢',x:7,y:9,hp:24,atk:5,def:1,xp:16,gold:7},{id:'slimeB',name:'김아빈의 풀잎 슬라임',emoji:'🟢',x:10,y:12,hp:24,atk:5,def:1,xp:16,gold:7},{id:'wolfA',name:'숲 늑대',emoji:'🐺',x:14,y:16,hp:36,atk:8,def:2,xp:24,gold:10},{id:'slimeC',name:'김아빈의 풀잎 슬라임',emoji:'🟢',x:18,y:7,hp:24,atk:5,def:1,xp:16,gold:7},{id:'wolfB',name:'숲 늑대',emoji:'🐺',x:21,y:12,hp:36,atk:8,def:2,xp:24,gold:10},{id:'thornA',name:'가시 정령',emoji:'🌵',x:25,y:17,hp:42,atk:9,def:3,xp:30,gold:14},{id:'slimeD',name:'김아빈의 풀잎 슬라임',emoji:'🟢',x:29,y:11,hp:24,atk:5,def:1,xp:16,gold:7}],
+ cave:[{id:'batA',name:'김아빈의 수정 박쥐',emoji:'🦇',x:7,y:8,hp:34,atk:9,def:2,xp:26,gold:12},{id:'ratA',name:'김아빈의 동굴 쥐',emoji:'🐀',x:11,y:12,hp:42,atk:9,def:3,xp:28,gold:13},{id:'batB',name:'김아빈의 수정 박쥐',emoji:'🦇',x:16,y:6,hp:34,atk:9,def:2,xp:26,gold:12},{id:'ratB',name:'김아빈의 동굴 쥐',emoji:'🐀',x:19,y:14,hp:42,atk:9,def:3,xp:28,gold:13},{id:'batC',name:'김아빈의 수정 박쥐',emoji:'🦇',x:24,y:12,hp:34,atk:9,def:2,xp:26,gold:12},{id:'golem',name:'윤준영',emoji:'🗿',x:29,y:10,hp:125,atk:13,def:5,xp:100,gold:70,boss:true}],
+ ruins:[{id:'sentA',name:'김아빈의 봉인 수호병',emoji:'🗿',x:7,y:12,hp:53,atk:11,def:4,xp:36,gold:18},{id:'sentB',name:'김아빈의 봉인 수호병',emoji:'🗿',x:13,y:8,hp:53,atk:11,def:4,xp:36,gold:18},{id:'sentC',name:'김아빈의 망령 궁수',emoji:'👻',x:20,y:12,hp:48,atk:12,def:3,xp:38,gold:20},{id:'sentD',name:'김아빈의 봉인 수호병',emoji:'🗿',x:27,y:12,hp:53,atk:11,def:4,xp:36,gold:18},{id:'guardian',name:'최재원',emoji:'👹',x:29,y:8,hp:155,atk:16,def:6,xp:140,gold:100,boss:true}],
+ sanctum:[{id:'shadeA',name:'김아빈의 별그늘',emoji:'🌑',x:9,y:8,hp:66,atk:14,def:5,xp:48,gold:22},{id:'shadeB',name:'김아빈의 별그늘',emoji:'🌑',x:17,y:14,hp:66,atk:14,def:5,xp:48,gold:22},{id:'shadeC',name:'김아빈의 별그늘',emoji:'🌑',x:24,y:8,hp:66,atk:14,def:5,xp:48,gold:22},{id:'nightKing',name:'김동혁',emoji:'👿',x:29,y:10,hp:240,atk:19,def:7,xp:250,gold:250,boss:true}],
+ marsh:[{id:'bogCrawler1',name:'김아빈의 늪지 기어괴물',emoji:'🐸',x:8,y:8,hp:59,atk:13,def:4,xp:42,gold:20},{id:'bogCrawler2',name:'김아빈의 늪지 기어괴물',emoji:'🐸',x:18,y:15,hp:59,atk:13,def:4,xp:42,gold:20},{id:'willowWraith',name:'김아빈의 버드나무 망령',emoji:'👻',x:25,y:6,hp:77,atk:16,def:5,xp:58,gold:28},{id:'swampGuardian',name:'늪의 수문장',emoji:'🐊',x:29,y:12,hp:180,atk:20,def:7,xp:145,gold:95,boss:true}]
+};
+// Expand all authored coordinates from the compact prototype into the larger world.
+function scaleMapPoint(o){o.x=Math.round(o.x*SCALE_X);o.y=Math.round(o.y*SCALE_Y);return o;}
+for(const m of Object.values(maps))m.structures.forEach(scaleMapPoint);
+for(const arr of Object.values(npcData))arr.forEach(scaleMapPoint);
+for(const arr of Object.values(nodes))arr.forEach(scaleMapPoint);
+for(const arr of Object.values(enemyDefs))arr.forEach(scaleMapPoint);
+function pathY(x){const edge=Math.max(0,Math.min(1,x/6,(COLS-1-x)/6));return MID_Y+Math.round(Math.sin(x*.13)*2*edge);}
+function mapCellBlocked(mapKey,x,y){if(x<1||y<1||x>=COLS-1||y>=ROWS-1)return true;for(const s of maps[mapKey].structures){if(s.walkable)continue;if(x>=s.x&&x<s.x+s.w&&y>=s.y&&y<s.y+s.h)return true;}return false;}
+function overlaps(a,b,pad=0){return a.x-pad < b.x+b.w && a.x+a.w+pad > b.x && a.y-pad < b.y+b.h && a.y+a.h+pad > b.y;}
+function areaClear(mapKey,s){
+ if(s.x<2||s.y<2||s.x+s.w>=COLS-2||s.y+s.h>=ROWS-2)return false;
+ for(let x=s.x;x<s.x+s.w;x++)for(let y=s.y;y<s.y+s.h;y++){if(mapCellBlocked(mapKey,x,y))return false;}
+ // Keep the main east-west trail and both exits comfortably open.
+ for(let x=s.x;x<s.x+s.w;x++)for(let y=s.y;y<s.y+s.h;y++)if(Math.abs(y-pathY(x))<=2)return false;
+ const actors=[...(npcData[mapKey]||[]),...(nodes[mapKey]||[]),...(enemyDefs[mapKey]||[])];
+ for(const a of actors)if(a.x>=s.x-1&&a.x<s.x+s.w+1&&a.y>=s.y-1&&a.y<s.y+s.h+1)return false;
+ if(mapKey==='village'&&s.x<33&&s.x+s.w>23&&s.y<30&&s.y+s.h>20)return false;
+ return true;
+}
+function addLandmark(mapKey,template){
+ const offsets=[[0,0],[0,5],[0,-5],[6,0],[-6,0],[6,5],[-6,5],[6,-5],[-6,-5],[12,0],[-12,0],[0,10],[0,-10],[12,8],[-12,8],[12,-8],[-12,-8]];
+ for(const [ox,oy] of offsets){const c={...template,x:template.x+ox,y:template.y+oy};if(areaClear(mapKey,c)){maps[mapKey].structures.push(c);return true;}}
+ return false;
+}
+// Landmarks give every region a distinct silhouette and create optional routes around obstacles.
+const landmarks={
+ village:[
+  {x:7,y:13,w:2,h:2,type:'well'},{x:47,y:10,w:5,h:3,type:'flowerbed',walkable:true},
+  {x:16,y:35,w:7,h:3,type:'farm',walkable:true},{x:48,y:32,w:5,h:4,type:'orchard'},
+  {x:34,y:6,w:6,h:1,type:'fence'},{x:53,y:16,w:2,h:2,type:'signpost',walkable:true}],
+ forest:[
+  {x:9,y:5,w:5,h:4,type:'pond'},{x:22,y:6,w:3,h:3,type:'ancientTree'},
+  {x:42,y:7,w:4,h:3,type:'mushroomGrove',walkable:true},{x:49,y:32,w:5,h:3,type:'flowerPatch',walkable:true},
+  {x:10,y:32,w:3,h:3,type:'stump'},{x:36,y:31,w:4,h:1,type:'fallenTree'},
+  {x:53,y:8,w:4,h:3,type:'pond'},{x:43,y:36,w:3,h:2,type:'shrine'}],
+ cave:[
+  {x:9,y:5,w:4,h:4,type:'crystalCluster'},{x:22,y:7,w:5,h:3,type:'deepPool'},
+  {x:42,y:6,w:4,h:4,type:'crystalVein',walkable:true},{x:10,y:32,w:4,h:3,type:'magma'},
+  {x:36,y:32,w:3,h:3,type:'crystalCluster'},{x:51,y:7,w:4,h:3,type:'deepPool'},
+  {x:50,y:33,w:5,h:2,type:'stalagmites'}],
+ ruins:[
+  {x:9,y:5,w:6,h:1,type:'brokenWall'},{x:22,y:6,w:2,h:3,type:'statue'},
+  {x:42,y:7,w:6,h:1,type:'brokenWall'},{x:10,y:32,w:4,h:3,type:'rubble',walkable:true},
+  {x:36,y:32,w:2,h:3,type:'obelisk'},{x:51,y:32,w:5,h:2,type:'rubble',walkable:true},
+  {x:48,y:7,w:2,h:2,type:'statue'}],
+ sanctum:[
+  {x:9,y:5,w:5,h:3,type:'starPool'},{x:22,y:6,w:3,h:3,type:'rift'},
+  {x:42,y:7,w:5,h:3,type:'starGarden',walkable:true},{x:10,y:32,w:4,h:3,type:'floatingRocks',walkable:true},
+  {x:36,y:32,w:3,h:3,type:'starPool'},{x:51,y:7,w:4,h:3,type:'rift'},
+  {x:50,y:33,w:4,h:3,type:'starlightShrine'}],
+ marsh:[
+  {x:8,y:5,w:5,h:3,type:'swampPool'},{x:23,y:6,w:3,h:3,type:'deadTree'},
+  {x:42,y:7,w:5,h:3,type:'fogVent',walkable:true},{x:10,y:32,w:4,h:3,type:'bonePile'},
+  {x:36,y:32,w:4,h:3,type:'swampPool'},{x:51,y:7,w:4,h:3,type:'deadTree'},
+  {x:50,y:33,w:4,h:3,type:'bonePile'}]
+};
+for(const [mk,arr] of Object.entries(landmarks))for(const f of arr)addLandmark(mk,f);
+function freeSpot(mapKey,x,y,kind){
+ const occupied=[...(npcData[mapKey]||[]),...(nodes[mapKey]||[]),...(enemyDefs[mapKey]||[])];
+ const candidates=[];for(let r=0;r<=8;r++){for(let dx=-r;dx<=r;dx++){const dy=r-Math.abs(dx);candidates.push([x+dx,y+dy]);if(dy)candidates.push([x+dx,y-dy]);}}
+ for(const [cx,cy] of candidates){if(cx<3||cx>COLS-4||cy<3||cy>ROWS-4)continue;if(mapCellBlocked(mapKey,cx,cy))continue;
+  if(Math.abs(cy-pathY(cx))<=2)continue;if(cx<5||cx>COLS-6){if(Math.abs(cy-MID_Y)<4)continue;}
+  if(mapKey==='village'&&cx>=23&&cx<=33&&cy>=20&&cy<=29)continue;
+  if(occupied.some(a=>Math.abs(a.x-cx)<=1&&Math.abs(a.y-cy)<=1))continue;
+  return {x:cx,y:cy};}
+ return {x,y};
+}
+// Re-home a few old resource nodes that overlap new enlarged-map rock formations.
+for(const [mk,arr] of Object.entries(nodes))for(const n of arr){if(mapCellBlocked(mk,n.x,n.y)){const p=freeSpot(mk,n.x,n.y,'node');n.x=p.x;n.y=p.y;}}
+function addExtraNode(mapKey,node,x,y){const p=freeSpot(mapKey,x,y,'node');nodes[mapKey].push({...node,...p});}
+function addExtraEnemy(mapKey,e,x,y){const p=freeSpot(mapKey,x,y,'enemy');enemyDefs[mapKey].push({...e,...p});}
+// Optional discoveries are spread across the far corners and lower trails of each region.
+for(let i=0;i<10;i++)addExtraNode('forest',{id:'herb'+(9+i),type:i%3===0?'mushroom':'herb',emoji:i%3===0?'🍄':'🌿'},7+(i*11)%51,5+(i*7)%33);
+for(let i=0;i<10;i++)addExtraNode('cave',{id:'ore'+(7+i),type:i%4===0?'starstone':'ore',emoji:i%4===0?'✨':'💎'},6+(i*13)%53,4+(i*9)%34);
+addExtraNode('cave',{id:'chestC2',type:'chest',emoji:'🎁'},51,36);
+for(let i=0;i<4;i++)addExtraNode('ruins',{id:'artifact'+i,type:'artifact',emoji:'🏺'},8+i*13,34-(i%2)*7);
+addExtraNode('ruins',{id:'chestR2',type:'chest',emoji:'🎁'},54,35);
+for(let i=0;i<4;i++)addExtraNode('sanctum',{id:'star'+i,type:'starstone',emoji:'🌟'},8+i*13,34-(i%2)*7);
+addExtraNode('sanctum',{id:'springS',type:'spring',emoji:'💧'},46,34);
+addExtraNode('sanctum',{id:'chestS2',type:'chest',emoji:'🎁'},54,9);
+// Additional optional enemies encourage exploring the newly opened corners.
+const extras={
+ forest:[['mossWolf','이끼 늑대','🐺',42,8,42,9,3,31,14],['mossWolf2','이끼 늑대','🐺',50,35,42,9,3,31,14],['sporeSprite','포자 정령','🍄',33,7,38,10,4,33,16],['thornBeast','가시 야수','🦔',20,35,58,12,5,42,20],['sapGolem','수액 골렘','🪵',43,22,62,15,6,44,18],['nightMoth','독안개 나방','🦋',54,8,45,16,3,38,17]],
+ cave:[['echoBat','메아리 박쥐','🦇',42,35,49,13,4,45,21],['crystalWorm','수정 벌레','🐛',34,7,55,14,5,50,24],['caveShade','동굴 망령','👻',51,35,57,14,5,52,25],['echoLurker','메아리 잠복자','🦎',53,15,70,19,4,57,28],['crystalMimic','수정 모방자','📦',43,21,82,20,8,67,32]],
+ ruins:[['lostKnight','길 잃은 기사','🛡️',42,35,68,16,6,58,30],['dustWraith','먼지 망령','👻',34,7,63,15,5,55,27],['ruinBeast','유적 야수','🐗',51,35,70,17,6,60,32],['graveWitch','무덤의 주술사','🧙‍♀️',52,21,70,21,3,64,31],['ironSentinel','철갑 심판관','🗿',39,31,90,22,10,75,36]],
+ sanctum:[['starWisp','별빛 도깨비불','🪄',35,7,78,17,6,68,35],['voidHound','공허 사냥개','🐺',43,35,82,18,6,72,38],['fallenAngel','타락한 수호자','👼',51,35,90,19,7,78,42],['riftStalker','균열 추적자','🕷️',54,21,90,24,6,84,40],['starDevourer','별빛 포식자','🌌',31,35,105,25,7,90,44]],
+ marsh:[['bogWitch','늪의 주술사','🧙‍♀️',39,8,76,20,4,62,29],['venomToad','맹독 두꺼비','🐸',53,20,74,22,5,65,30],['corpseLeech','시체 거머리','🪱',43,34,88,21,6,72,34],['mireBrute','수렁 파괴자','🦬',20,32,115,24,9,82,39]]
+};
+for(const [mk,arr] of Object.entries(extras))for(const [id,name,emoji,x,y,hp,atk,def,xp,gold] of arr)addExtraEnemy(mk,{id,name,emoji,hp,atk,def,xp,gold},x,y);
+
+// The six regions are now connected parts of one seamless world, not separate screens.
+// The village is at the heart of one large circular world. Other regions orbit it.
+const REGION_LAYOUT={
+ village:{x:112,y:123},
+ forest:{x:112,y:48},
+ cave:{x:174,y:79},
+ ruins:{x:174,y:167},
+ sanctum:{x:112,y:198},
+ marsh:{x:50,y:123}
+};
+function regionOrigin(key){return REGION_LAYOUT[key]||REGION_LAYOUT.village;}
+function regionAt(x,y){
+ let nearest='village',best=Infinity;
+ for(const [key,off] of Object.entries(REGION_LAYOUT)){
+  const cx=off.x+COLS/2,cy=off.y+ROWS/2,dx=x-cx,dy=y-cy,d=dx*dx+dy*dy;
+  if(d<best){best=d;nearest=key;}
+ }
+ return nearest;
+}
+function currentRegion(){return regionAt(state.x,state.y);}
+function insideWorldCircle(x,y){const dx=(x+.5)-WORLD_COLS/2,dy=(y+.5)-WORLD_ROWS/2;return dx*dx+dy*dy<=(WORLD_RADIUS-.6)*(WORLD_RADIUS-.6);}
+function distanceToSegment(px,py,ax,ay,bx,by){const dx=bx-ax,dy=by-ay,len=dx*dx+dy*dy;const t=len?Math.max(0,Math.min(1,((px-ax)*dx+(py-ay)*dy)/len)):0;const ex=px-(ax+t*dx),ey=py-(ay+t*dy);return Math.sqrt(ex*ex+ey*ey);}
+function worldRoadTile(x,y){
+ const off=regionOrigin('village'),ax=off.x+COLS/2,ay=off.y+ROWS/2,px=x+.5,py=y+.5;
+ for(const [key,other] of Object.entries(REGION_LAYOUT)){
+  if(key==='village')continue;
+  const bx=other.x+COLS/2,by=other.y+ROWS/2;
+  if(distanceToSegment(px,py,ax,ay,bx,by)<1.7)return true;
+ }
+ return false;
+}
+const worldStructures=[];
+for(const [region,layout] of Object.entries(REGION_LAYOUT)){
+  for(const st of maps[region].structures)worldStructures.push({...st,x:st.x+layout.x,y:st.y+layout.y,region});
+}
+function moveEntitiesToWorld(source){const result=[];for(const [region,arr] of Object.entries(source)){const off=regionOrigin(region);for(const obj of arr)result.push({...obj,x:obj.x+off.x,y:obj.y+off.y,region});}return result;}
+npcData.world=moveEntitiesToWorld(npcData);nodes.world=moveEntitiesToWorld(nodes);enemyDefs.world=moveEntitiesToWorld(enemyDefs);
+maps.world={name:'별빛 대륙',base:'#17252b',path:'#b5a078',structures:worldStructures,gateLabel:'지역 연결길'};
+const worldMapStructures=worldStructures;
+// Scenic landmarks along the outer ring make the circular world feel like a real continent.
+const ringLandmarks=[
+ {x:141,y:29,w:6,h:4,type:'shrine',walkable:true},
+ {x:218,y:58,w:5,h:4,type:'crystalCluster',walkable:true},
+ {x:254,y:141,w:5,h:5,type:'signpost',walkable:true},
+ {x:218,y:225,w:5,h:4,type:'brokenWall',walkable:true},
+ {x:141,y:253,w:6,h:4,type:'starlightShrine',walkable:true},
+ {x:60,y:222,w:5,h:4,type:'bonePile',walkable:true},
+ {x:28,y:141,w:5,h:5,type:'deadTree',walkable:true},
+ {x:60,y:59,w:5,h:4,type:'ancientTree',walkable:true},
+ {x:178,y:38,w:4,h:5,type:'mushroomGrove',walkable:true},
+ {x:246,y:198,w:5,h:4,type:'swampPool',walkable:true},
+ {x:88,y:244,w:5,h:4,type:'floatingRocks',walkable:true},
+ {x:37,y:89,w:5,h:4,type:'pond',walkable:true}
+];
+for(const landmark of ringLandmarks)worldMapStructures.push({...landmark,region:regionAt(landmark.x,landmark.y)});
+function connectorLane(x,y){return worldRoadTile(x,y);}
+function isGapTile(x,y){return false;}
+function enemiesHere(){return (enemyDefs[state.map]||[]).filter(e=>!state.defeated[state.map+':'+e.id]);}
+function nodeList(){return nodes[state.map]||[];}
+function blocked(x,y){return isBlocked(x,y);}
+// Fix obstacle data to allow house footprints to block all their cells, while corridors stay open.
+function isBlocked(x,y){
+ if(x<0||y<0||x>=WORLD_COLS||y>=WORLD_ROWS||!insideWorldCircle(x,y))return true;
+ for(const s of worldMapStructures){if(s.walkable)continue;if(x>=s.x&&x<s.x+s.w&&y>=s.y&&y<s.y+s.h)return true;}
+ return false;
+}
+function keyPos(x,y){return state.map+':'+x+','+y;}
+function addLog(msg){state.log.unshift(msg);state.log=state.log.slice(0,9);renderLog();}
+let toastTimer=null;function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2000);}
+function showDialog(title,text,callback){$('dialogTitle').textContent=title;$('dialogText').textContent=text;$('dialogOverlay').classList.remove('hidden');dialogCallback=callback||null;}
+let dialogCallback=null;
+$('dialogOk').addEventListener('click',()=>{ $('dialogOverlay').classList.add('hidden');if(dialogCallback){const fn=dialogCallback;dialogCallback=null;fn();}});
+function near(a,b){return Math.abs(a.x-b.x)+Math.abs(a.y-b.y);}
+function interact(){if(state.inCombat||!$('shopOverlay').classList.contains('hidden'))return;const candidates=[];
+ for(const n of (npcData.world||[])){const d=near(state,n);if(d<=2)candidates.push({d,kind:'npc',obj:n});}
+ for(const n of nodeList()){if(state.harvested['world:'+n.id]||state.opened['world:'+n.id])continue;const d=near(state,n);if(d<=1)candidates.push({d,kind:'node',obj:n});}
+ candidates.sort((a,b)=>a.d-b.d);if(!candidates.length){toast('주변에 조사할 대상이 없어요.');return;}const c=candidates[0];if(c.kind==='npc')talk(c.obj);else harvest(c.obj);}
+function talk(n){switch(n.id){
+ case 'elder':
+ if(state.story===0){state.story=1;addLog('촌장에게 별의 심장에 대한 이야기를 들었다.');showDialog('촌장 김산',`${state.name}, 잘 왔구나. 밤하늘의 별빛이 사라지고 있어. 숲에 흩어진 달빛 약초 4개를 모으고 풀잎 슬라임 3마리를 물리치렴. 오래된 동굴로 가는 길을 열 단서가 필요하다.`,updateUI);}
+ else if(state.story===1){if(state.herbs>=4&&state.slimesDefeated>=3){state.story=2;addLog('숲의 의뢰를 마쳤다. 수정 동굴로 향하자.');showDialog('촌장 김산','잘 해냈구나! 동굴 깊은 곳의 윤준영을 물리치고 달의 수정을 가져와 다오. 이 수정이 유적으로 가는 문을 열 열쇠란다.',updateUI);}else showDialog('촌장 김산',`아직 준비가 덜 되었구나. 달빛 약초 ${Math.min(state.herbs,4)}/4개, 슬라임 처치 ${state.slimesDefeated}/3마리를 확인하렴.`);}
+ else if(state.story===2){if(state.flags.crystal&&state.flags.golem){state.story=3;addLog('달의 수정을 촌장에게 전달했다.');showDialog('촌장 김산','수정이 빛을 되찾았구나! 이제 고대 유적의 봉인 3개를 깨우고 그곳의 수호자를 쓰러뜨려 다오. 그 너머에 별의 성소가 있단다.',updateUI);}else showDialog('촌장 김산',`수정 동굴을 조사하렴. 달의 수정: ${state.flags.crystal?'획득':'아직 없음'}, 윤준영: ${state.flags.golem?'격파':'미격파'}.`);}
+ else if(state.story===3){if(state.sealCount>=3&&state.flags.guardian){state.story=4;addLog('유적의 봉인이 모두 풀렸다.');showDialog('촌장 김산','유적이 열렸어! 마지막은 별의 성소다. 김동혁을 쓰러뜨리고 별의 심장을 되찾아라. 네가 해낼 수 있다고 믿는다.',updateUI);}else showDialog('촌장 김산',`유적의 봉인 ${state.sealCount}/3개, 최재원 ${state.flags.guardian?'격파':'미격파'}. 준비가 끝나면 다시 이야기하자.`);}
+ else showDialog('촌장 김산',state.story>=5?'네가 별빛을 되찾았구나. 이 세계는 네 용기를 기억할 거야.':'별의 성소에 있는 김동혁을 쓰러뜨리고 마지막 임무를 완수하렴.');break;
+ case 'herbalist': if(!state.side.herbDone){if(state.herbsGathered>=5){state.side.herbDone=true;state.gold+=60;state.potions+=2;addLog('보조 의뢰 완료: 약초 60G와 회복약 2개');showDialog('약초사 정결','흠, 약초는 제대로 모아 왔군. 약속한 보수다. 60G와 회복약 2개를 가져가.');}else showDialog('약초사 정결',`숲에서 약초 5개를 캐 와. 공짜로 시키는 건 아니야. 지금까지 ${state.herbsGathered}/5개다. 다 모아 오면 보수를 주지.`);}else showDialog('약초사 정결','약초는 밤에 더 잘 보여. 반짝이는 곳을 찾아봐. 두 번 말하게 하진 마.');break;
+ case 'merchant':if(!state.side.huntDone){if(state.totalKills>=5){state.side.huntDone=true;state.gold+=80;addLog('보조 의뢰 완료: 은찬에게서 80G를 받았다.');showDialog('상인 은찬','제법 잡았네. 약속한 80G 받아. 장비 살 거면 구경해.');}else showDialog('상인 은찬',`몬스터 5마리를 처리해. 보수는 80G야. 현재 ${state.totalKills}/5마리다.`);}else showDialog('상인 은찬','회복약은 전투 중에도 쓸 수 있어. 돈 있으면 장비도 사.');break;
+ case 'guard':showDialog('경비병 전태영',state.story===0?'촌장 김산이 기다리고 있다. 마을 중앙으로 가.':'숲과 동굴은 위험하다. 체력이 떨어지면 돌아와 쉬거나 회복약을 써. 적에게 함부로 다가가지 마.');break;
+ case 'ranger':showDialog('숲의 길잡이',`이 숲에는 약초가 ${nodes.forest.filter(n=>n.type==='herb'&&!state.harvested['world:'+n.id]).length}개 남아 있어. 길 가장자리도 꼼꼼히 살펴봐. 동쪽 길을 따라가면 수정 동굴로 이어져.`);break;
+ case 'miner':showDialog('길 잃은 광부','윤준영은 공격이 강하지만 느려. 방어를 적절히 쓰고, 마나가 충분하면 직업별 기술로 큰 피해를 줘.');break;
+ case 'ghost':showDialog('유적의 기억',`세 봉인은 각각 다른 방에 흩어져 있어. 가까이 다가가 E를 누르면 빛을 되찾을 거야. 봉인 ${state.sealCount}/3 활성화.`);break;
+ }}
+function harvest(n){const key=state.map+':'+n.id;state.harvested[key]=true;switch(n.type){
+ case 'herb':state.herbs++;state.herbsGathered++;state.gold+=2;addLog('달빛 약초를 채집했다. (+약초 1, +2G)');toast('🌿 달빛 약초 +1');break;
+ case 'ore':state.ores++;state.oreGathered++;state.gold+=4;addLog('빛나는 광석을 얻었다. (+광석 1, +4G)');toast('💎 광석 +1');break;
+ case 'crystal':if(state.story<2){state.harvested[key]=false;showDialog('달의 수정','아직 수정의 힘을 깨울 수 없다. 촌장의 의뢰를 받고 다시 오자.');return;}state.flags.crystal=true;state.crystals++;addLog('달의 수정을 획득했다!');showDialog('달의 수정','수정이 손안에서 푸르게 빛난다. 이제 촌장에게 돌아가자.');break;
+ case 'seal':if(state.story<3){state.harvested[key]=false;showDialog('봉인','봉인의 빛이 아직 반응하지 않는다. 촌장에게 동굴의 임무를 먼저 받자.');return;}state.sealCount++;addLog(`고대 봉인 활성화 (${state.sealCount}/3).`);showDialog('고대 봉인',`푸른 빛이 돌기둥을 타고 흐른다. 봉인 ${state.sealCount}/3개가 활성화되었다.`);break;
+ case 'mushroom':state.potions++;state.gold+=5;state.explorationFinds++;addLog('빛나는 버섯을 발견했다. 회복약 +1, +5G');toast('🍄 회복약 +1');break;
+ case 'starstone':state.crystals++;state.xp+=22;state.explorationFinds++;gainLevels();addLog('작은 별빛 조각을 발견했다. 수정 +1, XP +22');toast('✨ 별빛 조각 발견!');break;
+ case 'artifact':{const reward=45+rand(0,25);state.gold+=reward;state.xp+=35;state.explorationFinds++;gainLevels();addLog(`고대 유물을 발견했다. +${reward}G, XP +35`);showDialog('고대 유물',`유물의 가치를 알아보는 상인에게 팔 수 있다. ${reward}G와 경험치를 얻었다!`);break;}
+ case 'spring':state.hp=state.maxHp;state.mp=state.maxMp;state.explorationFinds++;addLog('별빛 샘에서 HP와 MP를 모두 회복했다.');showDialog('별빛 샘','차가운 빛이 몸을 감싸며 체력과 마나를 완전히 회복했다. 샘은 한 번 사용하면 빛을 잃는다.');break;
+ case 'chest':state.opened[key]=true;const rewardGold=25+Math.floor(Math.random()*31),rewardPotions=1+(Math.random()<.35?1:0);state.gold+=rewardGold;state.potions+=rewardPotions;state.explorationFinds++;if(n.region==='cave'){state.ores+=2;}if(n.region==='ruins'){state.xp+=45;gainLevels();}if(n.region==='sanctum'){state.crystals+=1;state.xp+=35;gainLevels();}if(n.region==='marsh'){state.xp+=30;gainLevels();}addLog(`보물 상자 발견! +${rewardGold}G, 회복약 +${rewardPotions}`);showDialog('보물 상자',`상자 안에서 ${rewardGold}G와 회복약 ${rewardPotions}개를 발견했다!`);break;
+ }updateUI();}
+function useGate(){toast('이 세계는 여러 지역이 하나의 지도에 연결되어 있어요.');}
+function useBackGate(){toast('이 세계는 여러 지역이 하나의 지도에 연결되어 있어요.');}
+function changeMap(map,x,y){/* 지역 이동은 이제 하나의 연속된 지도 안에서 이루어집니다. */}
+const ENEMY_TRAIT_INFO={
+ venom:{label:'☠️ 맹독',desc:'공격 시 일정 확률로 3턴 중독'},
+ swift:{label:'⚡ 연격',desc:'빠른 적은 한 턴에 두 번 공격'},
+ evasive:{label:'💨 회피',desc:'공격을 확률적으로 회피'},
+ armored:{label:'🛡️ 중갑',desc:'물리 피해를 30% 감소'},
+ drain:{label:'🩸 흡혈',desc:'입힌 피해 일부만큼 체력 회복'},
+ cursed:{label:'🌘 저주',desc:'3턴마다 방어력을 일부 무시'},
+ berserk:{label:'🔥 광폭화',desc:'체력 40% 이하에서 공격력 증가'},
+ crushing:{label:'💥 분쇄',desc:'3턴마다 강력한 강타'},
+ thorny:{label:'🌵 가시 갑옷',desc:'일부 공격을 반사'},
+ regenerate:{label:'♻️ 재생',desc:'짝수 턴에 체력을 회복'}
+};
+function traitsForEnemy(source){
+ if(Array.isArray(source.traits)&&source.traits.length)return source.traits;
+ const id=String(source.id||'').toLowerCase(),name=String(source.name||'');
+ if(id.includes('nightking'))return ['cursed','drain','berserk','crushing','regenerate'];
+ if(id.includes('guardian')||id.includes('golem')||id.includes('lostknight')||id.includes('ironsentinel')||id.includes('sapgolem')||id.includes('mirebrute'))return ['armored','crushing',...(source.boss?['berserk']:[])];
+ if(id.includes('mimic')||id.includes('thorn')||name.includes('가시'))return ['thorny','armored'];
+ if(id.includes('bat')||id.includes('moth')||id.includes('wisp')||id.includes('shade')||id.includes('riftstalker')||id.includes('voidhound'))return ['evasive','swift'];
+ if(id.includes('wolf')||id.includes('hound')||id.includes('ruinbeast'))return ['swift','berserk'];
+ if(id.includes('slime')||id.includes('spore')||id.includes('toad')||id.includes('bogcrawler')||id.includes('marshwild')||id.includes('bogwitch'))return ['venom'];
+ if(id.includes('rat')||id.includes('worm')||id.includes('leech')||id.includes('lurker'))return ['venom','drain'];
+ if(id.includes('wraith')||id.includes('ghost')||id.includes('witch')||id.includes('caveshade'))return ['cursed','drain'];
+ if(id.includes('sent')||id.includes('knight'))return ['armored','crushing'];
+ if(id.includes('fallenangel')||id.includes('stardevourer'))return ['drain','regenerate'];
+ if(id.includes('crystal'))return ['armored','crushing'];
+ if(source.boss)return ['crushing','berserk'];
+ const region=source.region||currentRegion();
+ if(region==='forest')return ['swift'];if(region==='cave')return ['evasive'];if(region==='ruins')return ['cursed'];if(region==='sanctum')return ['drain'];if(region==='marsh')return ['venom'];
+ return [];
+}
+function tuneEnemy(source){
+ // 도전 모드 강화: 지역이 깊어질수록 적 공격이 훨씬 아프고, 특성에 따라 전투 방식도 달라진다.
+ const zone={
+  village:{hp:1,atk:1,def:0,reward:1},
+  forest:{hp:2.35,atk:2.7,def:4,reward:1.8},
+  cave:{hp:2.65,atk:2.95,def:5,reward:2.15},
+  ruins:{hp:2.95,atk:3.2,def:6,reward:2.45},
+  sanctum:{hp:3.3,atk:3.45,def:7,reward:2.9},
+  marsh:{hp:3.2,atk:3.4,def:7,reward:2.75}
+ }[source.region||currentRegion()]||{hp:1,atk:1,def:0,reward:1};
+ const bossHp=source.boss?1.28:1, bossAtk=source.boss?1.22:1;
+ return {...source,
+  traits:traitsForEnemy(source),
+  hp:Math.ceil(source.hp*zone.hp*bossHp),
+  atk:Math.ceil(source.atk*zone.atk*bossAtk),
+  def:source.def+zone.def+(source.boss?2:0),
+  xp:Math.ceil(source.xp*zone.reward*(source.boss?1.4:1)),
+  gold:Math.ceil(source.gold*Math.max(1.35,zone.reward*.86)*(source.boss?1.3:1))
+ };
+}
+function startCombat(source){if(state.inCombat)return;if(source.boss){if(source.id==='golem'&&state.story<2){showDialog('윤준영','윤준영은 동굴의 수정 장벽 뒤에 있다. 촌장에게 의뢰를 받은 뒤 도전하자.');return;}if(source.id==='guardian'&&(state.story<3||state.sealCount<3)){showDialog('최재원','최재원은 봉인의 힘에 감싸여 있다. 먼저 봉인 세 개를 활성화하자.');return;}if(source.id==='nightKing'&&state.story<4){showDialog('김동혁','김동혁은 제단 너머로 물러선다. 아직 별빛의 힘이 부족하다.');return;}}
+ const e=tuneEnemy(source);state.inCombat=true;state.enemy={...e,curHp:e.hp,sleepTurns:0};state.guarding=false;state.guardTurns=0;state.guardBonus=0;state.turn=0;state.poisonTurns=0;state.poisonDamage=0;state.gachaArmorLastStandUsed=false;$('battleOverlay').classList.remove('hidden');$('battleTitle').textContent=`전투 · ${e.name}`;$('enemyEmoji').textContent=e.emoji;$('enemyName').textContent=e.name;$('battleText').textContent=`${e.name}이(가) 길을 막아섰다! 무엇을 할까?`;$('battleNote').textContent=e.boss?'위험: 보스는 3번째 턴마다 강력한 필살기를 사용하며 일부는 광폭화·흡혈·재생 특성을 가졌다. 방어할 턴을 계산하자.':'적의 특성을 확인하자. 맹독·연격·회피·중갑 등 특성에 따라 공략법이 달라진다.';$('battleCloseBtn').disabled=true;enableBattle(true);renderBattle();}
+function enableBattle(on){['attackBtn','skillBtn','potionBtn','defendBtn','runBtn'].forEach(id=>$(id).disabled=!on);}
+function renderBattle(){if(!state.enemy)return;const e=state.enemy;$('enemyName').textContent=e.name;$('enemyHpText').textContent=`HP ${Math.max(0,e.curHp)} / ${e.hp}`;$('enemyHpBar').style.width=`${Math.max(0,e.curHp)/e.hp*100}%`;const job=JOBS[state.job]||JOBS.knight;$('skillBtn').textContent=`${job.emoji} ${job.skillName} (${job.skillCost} MP)`;$('potionBtn').textContent=`🧪 회복약 (${state.potions})`;$('enemyTraitsText').textContent=(e.traits||[]).map(t=>ENEMY_TRAIT_INFO[t]?.label||t).join(' · ')||'고유 특성 없음';const baseNote=e.boss?'위험: 보스는 3번째 턴마다 강력한 필살기를 사용하며 일부는 광폭화·흡혈·재생 특성을 가졌다. 방어할 턴을 계산하자.':'적의 특성을 확인하자. 맹독·연격·회피·중갑 등 특성에 따라 공략법이 달라진다.';$('battleNote').textContent=state.guardTurns>0?`🛡️ 방어 강화 중: 방어력 +${state.guardBonus}, 받는 피해 30% 감소 · 남은 ${state.guardTurns}턴`:`${baseNote} 회복약은 최대 HP의 30%를 회복해요.`;}
+function damageEnemy(e,amount,kind='physical'){
+ const traits=e.traits||[];
+ if(traits.includes('evasive')&&Math.random()<.22)return {damage:0,dodged:true,reflected:0};
+ let actual=Math.max(0,Math.floor(amount));
+ if(traits.includes('armored')&&kind!=='magic')actual=Math.max(1,Math.floor(actual*(kind==='holy'?.88:.70)));
+ e.curHp-=actual;
+ let reflected=0;
+ if(traits.includes('thorny')&&actual>0&&Math.random()<.38){reflected=Math.max(2,Math.floor(actual*.14));state.hp=Math.max(1,state.hp-reflected);}
+ return {damage:actual,dodged:false,reflected};
+}
+function playerAction(action){if(!state.inCombat||!state.enemy||$('battleCloseBtn').disabled===false)return;const e=state.enemy,job=JOBS[state.job]||JOBS.knight;
+ if(action==='skill'&&state.mp<job.skillCost){toast(`마나가 부족해요! ${job.skillCost} MP가 필요합니다.`);return;}
+ if(action==='potion'&&state.potions<=0){toast('회복약이 없어요!');return;}
+ if(action==='potion'&&state.hp===state.maxHp&&state.mp===state.maxMp){toast('이미 충분히 회복했어요.');return;}
+ let msg='';state.turn++;
+ const executeNow=state.gachaWeaponName==='처형의 별검'&&(action==='attack'||action==='skill')&&e.curHp>0&&e.curHp<=e.hp*.25;
+ if(executeNow){if(action==='skill')state.mp-=job.skillCost;e.curHp=0;msg=`☠️ 처형의 별검 발동! ${e.name}의 HP가 25% 이하라 즉시 처치했다!`;}
+ else if(action==='attack'){
+  let raw=Math.max(2,state.atk+rand(-3,4)-e.def),critical=false;
+  if(state.job==='assassin'&&Math.random()<.15){raw=Math.floor(raw*1.55);critical=true;}
+  const hit=damageEnemy(e,raw,'physical');
+  msg=hit.dodged?`${e.name}이(가) 민첩하게 공격을 피했다!`:`${critical?'치명타! ':''}${state.name}의 공격! ${hit.damage} 피해를 주었다.`;
+  if(hit.reflected)msg+=` 가시 반격으로 ${hit.reflected} 피해를 받았다.`;
+  msg+=applyGachaWeaponHit(e,hit);
+ }
+ if(action==='skill'&&!executeNow){
+  state.mp-=job.skillCost;let raw=0,kind='physical';
+  if(state.job==='knight'){
+   raw=Math.max(7,Math.floor(state.atk*1.8+state.level*2+rand(-2,4)-e.def));
+   msg='🛡️ 용맹의 일격!';
+  }else if(state.job==='mage'){
+   raw=Math.max(10,Math.floor(state.atk*2.25+state.level*4+rand(0,8)-e.def*.60));kind='magic';
+   msg='🔮 아케인 버스트!';
+  }else if(state.job==='assassin'){
+   raw=Math.max(7,Math.floor(state.atk*1.5+state.level*2+rand(0,5)-e.def));
+   const critical=Math.random()<.30;if(critical)raw=Math.floor(raw*1.6);
+   msg=`🗡️ 그림자 연격! ${critical?'치명타! ':''}`;
+  }else{
+   raw=Math.max(6,Math.floor(state.atk*1.35+state.level*2+rand(0,4)-e.def*.75));kind='holy';
+   const heal=Math.min(Math.ceil(state.maxHp*.16),state.maxHp-state.hp);state.hp+=heal;
+   msg=`✨ 성광 심판! HP ${heal} 회복, `;
+  }
+  const hit=damageEnemy(e,raw,kind);
+  msg+=hit.dodged?`${e.name}이(가) 기술을 회피했다!`:`${hit.damage} 피해를 주었다.`;
+  if(hit.reflected)msg+=` 가시 반격으로 ${hit.reflected} 피해를 받았다.`;
+  msg+=applyGachaWeaponHit(e,hit);
+ }
+ if(action==='potion'){state.potions--;const potionFactor=state.job==='cleric'?1.25:1;const heal=Math.min(Math.ceil(state.maxHp*.30*potionFactor),state.maxHp-state.hp);const mana=Math.min(3,state.maxMp-state.mp);state.hp+=heal;state.mp+=mana;msg=`강화 회복약 사용! 최대 HP의 30% 회복${state.job==='cleric'?' (성직자 추가 효과 적용)':''} · HP +${heal}, MP +${mana}.`;}
+ if(action==='defend'){state.guardTurns=3;state.guardBonus=Math.max(4,Math.ceil(state.def*.75));state.guarding=true;msg=`🛡️ 방어 강화! 방어력 +${state.guardBonus}, 받는 피해 30% 감소. 적의 행동 3턴 동안 유지된다.`;}
+ if(action==='run'){if(e.boss){msg='강력한 보스 앞에서는 도망칠 수 없다!';}else if(Math.random()<.45){state.inCombat=false;state.enemy=null;state.guardTurns=0;state.guardBonus=0;state.guarding=false;state.poisonTurns=0;state.poisonDamage=0;$('battleOverlay').classList.add('hidden');addLog('전투에서 도망쳤다.');toast('무사히 도망쳤다.');return;}else msg='도망에 실패했다!';}
+ $('battleText').textContent=msg;renderBattle();if(e.curHp<=0){winBattle();return;}if(action==='run'||action==='defend'||action==='potion'||action==='attack'||action==='skill')enemyTurn();
+}
+function playerKnockedOut(reason){
+ state.hp=1;state.gold=Math.max(0,state.gold-10);state.guardTurns=0;state.guardBonus=0;state.guarding=false;$('battleText').textContent+=`\n${reason} 눈앞이 어두워졌다… 마을에서 간신히 정신을 차렸다. 10G를 잃었다.`;
+ state.inCombat=false;state.enemy=null;state.poisonTurns=0;state.poisonDamage=0;$('battleNote').textContent='기절했다가 마을에서 깨어났습니다. 체력은 1로 회복됩니다.';enableBattle(false);$('battleCloseBtn').disabled=false;
+ state.map='world';state.x=regionOrigin('village').x+COLS/2;state.y=regionOrigin('village').y+MID_Y;state.visited.village=true;addLog('기절해 마을에서 깨어났다.');
+}
+function enemyTurn(){
+ if(!state.inCombat||!state.enemy)return;const e=state.enemy,traits=e.traits||[],lines=[];
+ // Poison from previous hits damages the hero before the next enemy action.
+ if(state.poisonTurns>0){state.hp-=state.poisonDamage;state.poisonTurns--;lines.push(`☠️ 독 피해 ${state.poisonDamage}! 남은 중독 ${state.poisonTurns}턴.`);if(state.hp<=0){$('battleText').textContent+='\n'+lines.join('\n');playerKnockedOut('맹독으로 쓰러졌다.');renderBattle();updateUI();return;}}
+ if((e.sleepTurns||0)>0){
+  e.sleepTurns--;
+  lines.push(`💤 ${e.name}은(는) 잠들어 행동하지 못했다! 남은 수면 ${e.sleepTurns}턴.`);
+  if(state.guardTurns>0){state.guardTurns--;if(state.guardTurns>0)lines.push(`🛡️ 방어 강화 유지: 방어력 +${state.guardBonus} · 남은 ${state.guardTurns}턴.`);else{lines.push('🛡️ 방어 강화 효과가 끝났다.');state.guardBonus=0;state.guarding=false;}}
+  $('battleText').textContent+='\n'+lines.join('\n');addLog(lines.join(' '));renderBattle();updateUI();return;
+ }
+ if(traits.includes('regenerate')&&state.turn%2===0&&e.curHp<e.hp){const heal=Math.min(Math.ceil(e.hp*.045),e.hp-e.curHp);e.curHp+=heal;lines.push(`♻️ ${e.name}이(가) ${heal} HP를 재생했다.`);}
+ let hits=1,multiplier=1,special='';
+ if((e.boss||traits.includes('crushing'))&&state.turn%3===0){multiplier=e.boss?1.78:1.72;special=e.boss?'필살기':'분쇄 강타';}
+ else if(state.turn%4===0){multiplier=1.72;special='강공격';}
+ else if(traits.includes('swift')){hits=2;multiplier=.72;special='연속 공격';}
+ const berserk=traits.includes('berserk')&&e.curHp<=e.hp*.4?1.42:1;
+ if(berserk>1)lines.push(`🔥 ${e.name}이(가) 광폭화했다!`);
+ let totalDamage=0,landedHits=0,armorSleepTriggered=false;
+ for(let i=0;i<hits;i++){
+  if(state.gachaWeaponName==='용의 파쇄검'&&Math.random()<.15){lines.push(`⚔️ 용의 파쇄검 패링 성공! ${e.name}의 공격을 완전히 막았다.`);continue;}
+  if(state.gachaArmorName==='용린 갑주'&&Math.random()<.15){lines.push(`🐉 용린 갑주 발동! ${e.name}의 공격을 완전히 막았다.`);continue;}
+  landedHits++;
+  let raw=Math.ceil((e.atk+rand(-2,4))*multiplier*berserk),defense=state.def+(state.guardTurns>0?state.guardBonus:0);
+  if(traits.includes('cursed')&&state.turn%3===0){defense=Math.floor(defense*.55);if(i===0)lines.push('🌘 저주가 방어력을 깎아내렸다!');}
+  let dmg=Math.max(2,raw-(special==='필살기'?Math.floor(defense*.42):defense));
+  if(state.guardTurns>0)dmg=Math.max(1,Math.floor(dmg*.70));
+  if(state.job==='knight')dmg=Math.max(1,Math.floor(dmg*.90));
+  const hpBeforeHit=state.hp;
+  if(state.gachaArmorName==='불사조의 갑주'&&!state.gachaArmorLastStandUsed&&hpBeforeHit<=state.maxHp*.25&&hpBeforeHit-dmg<=0){
+   state.hp=Math.max(1,Math.ceil(state.maxHp*.25));state.gachaArmorLastStandUsed=true;
+   lines.push(`🔥 불사조의 갑주 발동! 치명타를 견디고 HP ${state.hp}로 살아남았다. 이번 전투에서는 다시 발동하지 않는다.`);
+   break;
+  }
+  state.hp-=dmg;totalDamage+=dmg;
+  lines.push(`${e.name}의 ${special?special+(hits>1?` ${i+1}타`:'' ):'공격'}! ${dmg} 피해를 받았다.`);
+  if(state.gachaArmorName==='흡혈의 갑주'&&dmg>0){const heal=Math.min(Math.max(1,Math.floor(dmg*.25)),state.maxHp-Math.max(0,state.hp));if(heal>0){state.hp+=heal;lines.push(`🩸 흡혈의 갑주 발동! 받은 피해의 25%에 해당하는 HP ${heal} 회복.`);}}
+  if(state.gachaArmorName==='몽환의 외투'&&dmg>0&&Math.random()<.20){e.sleepTurns=Math.max(e.sleepTurns||0,2);armorSleepTriggered=true;lines.push(`💤 몽환의 외투 반격! ${e.name}이(가) 잠들어 다음 2턴 동안 행동하지 못한다.`);}
+  if(traits.includes('drain')&&dmg>0){const heal=Math.min(Math.ceil(dmg*.22),e.hp-e.curHp);if(heal>0){e.curHp+=heal;lines.push(`🩸 ${e.name}이(가) HP ${heal} 흡수.`);}}
+  if(state.hp<=0||armorSleepTriggered)break;
+ }
+ if(state.guardTurns>0){state.guardTurns--;if(state.guardTurns>0){lines.push(`🛡️ 방어 강화 유지: 방어력 +${state.guardBonus} · 남은 ${state.guardTurns}턴.`);}else{lines.push('🛡️ 방어 강화 효과가 끝났다.');state.guardBonus=0;state.guarding=false;}}
+ if(landedHits>0&&traits.includes('venom')&&state.hp>0&&state.poisonTurns===0&&Math.random()<.42){state.poisonTurns=3;state.poisonDamage=Math.max(5,Math.ceil(e.atk*.12));lines.push(`☠️ ${e.name}의 독에 중독됐다! 다음 3턴 동안 턴마다 ${state.poisonDamage} 피해.`);}
+ if(state.hp<=0){$('battleText').textContent+='\n'+lines.join('\n');playerKnockedOut('적의 공격에 쓰러졌다.');}
+ else $('battleText').textContent+='\n'+lines.join('\n');
+ addLog(lines.join(' '));renderBattle();updateUI();
+}
+function winBattle(){const e=state.enemy;state.defeated[state.map+':'+e.id]=true;state.totalKills++;if(e.id.startsWith('slime'))state.slimesDefeated++;if(e.id==='golem')state.flags.golem=true;if(e.id==='guardian')state.flags.guardian=true;if(e.id==='nightKing'){state.flags.boss=true;state.story=5;}
+ state.xp+=e.xp;state.gold+=e.gold;gainLevels();state.inCombat=false;state.guardTurns=0;state.guardBonus=0;state.guarding=false;state.poisonTurns=0;state.poisonDamage=0;const text=`${e.name}을(를) 물리쳤다!\n경험치 +${e.xp}, 골드 +${e.gold}G${state.story===5?'\n별의 심장을 되찾았다! 모험을 완수했다!':''}`;$('battleText').textContent=text;$('battleNote').textContent='확인을 눌러 탐험으로 돌아가세요.';$('battleCloseBtn').disabled=false;enableBattle(false);addLog(`${e.name} 처치! XP +${e.xp}, +${e.gold}G`);$('enemyHpBar').style.width='0%';updateUI();}
+function closeBattle(){if($('battleCloseBtn').disabled)return;$('battleOverlay').classList.add('hidden');state.enemy=null;state.guardTurns=0;state.guardBonus=0;state.guarding=false;updateUI();}
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function gainLevels(){let need=state.level*40;while(state.xp>=need){state.xp-=need;state.level++;const growth=(JOBS[state.job]||JOBS.knight).growth;state.maxHp+=growth.hp;state.maxMp+=growth.mp;state.atk+=growth.atk;state.def+=growth.def;const hpRecovered=Math.min(state.maxHp-state.hp,Math.ceil(state.maxHp*.18));state.hp+=hpRecovered;const mpRecovered=Math.min(state.maxMp-state.mp,Math.ceil(state.maxMp*.33));state.mp+=mpRecovered;addLog(`레벨 업! Lv.${state.level} · 직업 능력치 상승, HP +${hpRecovered}, MP +${mpRecovered}`);need=state.level*40;toast(`레벨 업! Lv.${state.level}`);}}
+function maybeRandomEncounter(){
+ const region=currentRegion();if(region==='village')return;state.stepsSinceEncounter=(state.stepsSinceEncounter||0)+1;if(state.stepsSinceEncounter<8)return;state.stepsSinceEncounter=0;if(Math.random()>0.42)return;state.randomCounter=(state.randomCounter||0)+1;const lv=state.level,counter=state.randomCounter;
+ const pool={
+  forest:[
+   {id:'slimeWild',name:'야생 독슬라임',emoji:'🟢',hp:25+lv*3,atk:7+Math.floor(lv/2),def:1,xp:18,gold:8,traits:['venom']},
+   {id:'wolfWild',name:'굶주린 숲 늑대',emoji:'🐺',hp:38+lv*4,atk:10+Math.floor(lv/2),def:3,xp:29,gold:13,traits:['swift','berserk']},
+   {id:'sporeWild',name:'포자 망령',emoji:'🍄',hp:42+lv*3,atk:9+Math.floor(lv/2),def:4,xp:31,gold:15,traits:['venom','cursed']},
+   {id:'thornWild',name:'가시 갑옷 짐승',emoji:'🦔',hp:55+lv*4,atk:12+Math.floor(lv/2),def:6,xp:40,gold:20,traits:['thorny','armored']}
+  ],
+  cave:[
+   {id:'batWild',name:'떠도는 수정 박쥐',emoji:'🦇',hp:36+lv*4,atk:12+Math.floor(lv/2),def:2,xp:28,gold:13,traits:['evasive','swift']},
+   {id:'ratWild',name:'독이빨 동굴 쥐',emoji:'🐀',hp:43+lv*4,atk:13+Math.floor(lv/2),def:3,xp:31,gold:15,traits:['venom','swift']},
+   {id:'echoWild',name:'메아리 잠복자',emoji:'🦎',hp:62+lv*4,atk:16+Math.floor(lv/2),def:4,xp:42,gold:23,traits:['drain','evasive']},
+   {id:'crystalWild',name:'수정 껍질 벌레',emoji:'🐛',hp:70+lv*5,atk:15+Math.floor(lv/2),def:8,xp:45,gold:25,traits:['armored','crushing']}
+  ],
+  ruins:[
+   {id:'ghostWild',name:'저주받은 유적 망령',emoji:'👻',hp:50+lv*4,atk:16+Math.floor(lv/2),def:3,xp:39,gold:19,traits:['cursed','drain']},
+   {id:'knightWild',name:'길 잃은 철갑 기사',emoji:'🛡️',hp:68+lv*5,atk:18+Math.floor(lv/2),def:8,xp:51,gold:27,traits:['armored','crushing']},
+   {id:'witchWild',name:'무덤의 주술사',emoji:'🧙‍♀️',hp:59+lv*4,atk:20+Math.floor(lv/2),def:4,xp:50,gold:29,traits:['cursed','venom']},
+   {id:'houndWild',name:'폐허 사냥개',emoji:'🐗',hp:74+lv*5,atk:19+Math.floor(lv/2),def:6,xp:55,gold:30,traits:['swift','berserk']}
+  ],
+  sanctum:[
+   {id:'shadeWild',name:'떠도는 별그늘',emoji:'🌑',hp:64+lv*5,atk:21+Math.floor(lv/2),def:4,xp:48,gold:23,traits:['evasive','drain']},
+   {id:'riftWild',name:'균열 추적자',emoji:'🕷️',hp:82+lv*5,atk:24+Math.floor(lv/2),def:6,xp:63,gold:33,traits:['evasive','swift']},
+   {id:'starDevourerWild',name:'별빛 포식자',emoji:'🌌',hp:100+lv*5,atk:25+Math.floor(lv/2),def:7,xp:72,gold:38,traits:['drain','regenerate']},
+   {id:'fallenWild',name:'타락한 성소 수호자',emoji:'👼',hp:115+lv*6,atk:27+Math.floor(lv/2),def:9,xp:85,gold:43,traits:['armored','crushing','berserk']}
+  ],
+  marsh:[
+   {id:'marshWild',name:'늪의 추적자',emoji:'🐸',hp:65+lv*5,atk:18+Math.floor(lv/2),def:5,xp:48,gold:24,traits:['venom','swift']},
+   {id:'bogCrawlerWild',name:'맹독 늪지 기어괴물',emoji:'🐊',hp:78+lv*5,atk:22+Math.floor(lv/2),def:6,xp:55,gold:29,traits:['venom','armored']},
+   {id:'swampLeechWild',name:'피를 빠는 수렁 괴물',emoji:'🪱',hp:85+lv*5,atk:21+Math.floor(lv/2),def:6,xp:61,gold:32,traits:['drain','berserk']},
+   {id:'marshWraithWild',name:'저주 안개 망령',emoji:'👻',hp:92+lv*5,atk:23+Math.floor(lv/2),def:7,xp:68,gold:35,traits:['cursed','venom']}
+  ]
+ };
+ const choices=pool[region]||pool.forest,chosen=choices[rand(0,choices.length-1)];
+ const humanTypes=[
+  {name:'이승준',emoji:'🧙🏻‍♂️'},
+  {name:'엄태준',emoji:'🗡️'},
+  {name:'조예준',emoji:'🛡️'},
+  {name:'김아빈',emoji:'⚔️'}
+ ];
+ const hasPoison=(chosen.traits||[]).includes('venom'),hasArmor=(chosen.traits||[]).includes('armored')||(chosen.traits||[]).includes('crushing'),hasDrain=(chosen.traits||[]).includes('drain')||(chosen.traits||[]).includes('regenerate'),hasSwift=(chosen.traits||[]).includes('swift')||(chosen.traits||[]).includes('evasive');
+ const human=hasPoison?humanTypes[0]:hasSwift?humanTypes[1]:hasArmor?humanTypes[2]:humanTypes[3];
+ const e={...chosen,originalName:chosen.name,name:human.name,emoji:human.emoji,humanForm:true,id:chosen.id+counter,x:state.x,y:state.y,region};
+ addLog(`탐험 중 ${e.name}의 기척을 느꼈다!`);startCombat(e);
+}
+function move(dx,dy){if(state.inCombat||!$('dialogOverlay').classList.contains('hidden')||!$('shopOverlay').classList.contains('hidden')||!$('startScreen').classList.contains('hidden'))return;if(dx<0)state.facing='left';else if(dx>0)state.facing='right';else if(dy<0)state.facing='up';else if(dy>0)state.facing='down';const nx=state.x+dx,ny=state.y+dy;if(isBlocked(nx,ny)){render();return;}
+ const npc=(npcData.world||[]).find(n=>n.x===nx&&n.y===ny);if(npc){toast(`${npc.name} 옆에서 E를 눌러 대화하세요.`);return;}
+ const enemy=enemiesHere().find(e=>e.x===nx&&e.y===ny);if(enemy){startCombat(enemy);return;}
+ const previousRegion=currentRegion();state.x=nx;state.y=ny;const region=currentRegion();if(!state.visited[region]){state.visited[region]=true;addLog(`새 지역 발견: ${maps[region].name}`);toast(`새 지역 발견 · ${maps[region].name}`);}if(region!==previousRegion){$('locationName').textContent=maps[region].name;updateTip();}
+ maybeRandomEncounter();render();}
+// Draw a readable, compact top-down adventure map.
+function roundRect(c,x,y,w,h,r){c.beginPath();c.roundRect(x,y,w,h,r);}
+function drawTile(x,y,sx,sy){
+ if(!insideWorldCircle(x,y)){
+  ctx.fillStyle='#101927';ctx.fillRect(sx,sy,TILE,TILE);
+  if(((x*7+y*11)%9)===0){ctx.strokeStyle='#33465a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(sx+5,sy+10);ctx.quadraticCurveTo(sx+15,sy+5,sx+26,sy+10);ctx.stroke();}
+  return;
+ }
+ const region=regionAt(x,y),off=regionOrigin(region),lx=x-off.x,ly=y-off.y,m=maps[region],p=((lx*13+ly*7)%17+17)%17;
+ ctx.fillStyle=m.base;ctx.fillRect(sx,sy,TILE,TILE);
+ if(region==='village'){
+  if(p===0||p===5){ctx.fillStyle='#7da977';ctx.fillRect(sx+5,sy+8,3,3);ctx.fillRect(sx+21,sy+22,2,2);}if(p===8){ctx.fillStyle='#9cbc77';ctx.fillRect(sx+12,sy+4,2,5);}
+ }else if(region==='forest'){
+  if(p%5===0){ctx.fillStyle='#2d6841';ctx.fillRect(sx+3,sy+7,4,10);ctx.fillRect(sx+19,sy+18,5,3);}if(p===2||p===11){ctx.fillStyle=p===2?'#e9c66b':'#d9a3d4';ctx.beginPath();ctx.arc(sx+8,sy+21,2,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(sx+24,sy+8,2,0,Math.PI*2);ctx.fill();}
+ }else if(region==='cave'){
+  if(p%4===0){ctx.fillStyle='#5e647e';ctx.fillRect(sx+5,sy+7,4,4);ctx.fillRect(sx+22,sy+18,3,3);}if(p===1||p===9){ctx.strokeStyle='#7895cf';ctx.globalAlpha=.6;ctx.beginPath();ctx.moveTo(sx+5,sy+25);ctx.lineTo(sx+12,sy+17);ctx.lineTo(sx+17,sy+20);ctx.stroke();ctx.globalAlpha=1;}
+ }else if(region==='ruins'){
+  if(p%4===0){ctx.strokeStyle='#a39b78';ctx.strokeRect(sx+4,sy+4,24,24);}if(p===3||p===12){ctx.fillStyle='#62634d';ctx.fillRect(sx+8,sy+8,7,4);ctx.fillRect(sx+18,sy+21,6,4);}
+ }else if(region==='sanctum'){
+  if(p%3===0){ctx.fillStyle='#484f83';ctx.fillRect(sx+8,sy+8,3,3);}if(p===5||p===14){ctx.fillStyle='#8a91d4';ctx.globalAlpha=.65;ctx.beginPath();ctx.arc(sx+22,sy+10,2,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}
+ }else if(region==='marsh'){
+  if(p%3===0){ctx.fillStyle='#294940';ctx.beginPath();ctx.ellipse(sx+14,sy+18,10,5,.2,0,Math.PI*2);ctx.fill();}if(p===4||p===11){ctx.fillStyle='#7eaa72';ctx.fillRect(sx+7,sy+7,2,9);ctx.fillRect(sx+13,sy+11,2,7);}
+ }
+ const horizontal=Math.abs(ly-pathY(lx))<=1;const branchX=Math.floor(COLS*.5)+Math.round(Math.sin(ly*.12)*3);const vertical=Math.abs(lx-branchX)<=0;const radialRoad=worldRoadTile(x,y);
+ if(horizontal||vertical||radialRoad){ctx.fillStyle=m.path;ctx.fillRect(sx,sy,TILE,TILE);if((lx+ly)%4===0){ctx.fillStyle='#ffffff14';ctx.fillRect(sx+5,sy+8,5,2);ctx.fillRect(sx+20,sy+23,4,2);}if(region==='village'&&vertical){ctx.fillStyle='#d9c59c';ctx.fillRect(sx+12,sy,8,TILE);}}
+ if(region==='forest'&&((lx*7+ly*3)%31===0)&&!horizontal&&!vertical){ctx.fillStyle='#4f8c4f';ctx.fillRect(sx+4,sy+4,5,5);ctx.fillStyle='#8ab868';ctx.fillRect(sx+17,sy+18,3,3);}
+ if(region==='sanctum'&&((lx*5+ly*11)%23===0)){ctx.fillStyle='#b5a8ff';ctx.globalAlpha=.55;ctx.fillRect(sx+15,sy+13,2,2);ctx.globalAlpha=1;}
+ if(region==='marsh'&&((lx+ly)%8===0)){ctx.strokeStyle='#87b19a55';ctx.beginPath();ctx.moveTo(sx+3,sy+9);ctx.lineTo(sx+15,sy+6);ctx.lineTo(sx+28,sy+10);ctx.stroke();}
+}
+function drawStructures(camX,camY){for(const s of worldMapStructures){const sx=s.x*TILE-camX,sy=s.y*TILE-camY,w=s.w*TILE,h=s.h*TILE;if(sx<-w||sy<-h||sx>canvas.width||sy>canvas.height)continue;
+ if(s.type==='house'){ctx.fillStyle='#342f3d';ctx.fillRect(sx+2,sy+9,w-4,h-8);ctx.fillStyle=s.color;ctx.beginPath();ctx.moveTo(sx-2,sy+12);ctx.lineTo(sx+w/2,sy-10);ctx.lineTo(sx+w+2,sy+12);ctx.closePath();ctx.fill();ctx.fillStyle='#f1d7a3';ctx.fillRect(sx+8,sy+20,11,10);ctx.fillRect(sx+w-20,sy+20,11,10);ctx.fillStyle='#4b3440';ctx.fillRect(sx+w/2-5,sy+h-21,10,21);}
+ else if(s.type==='tree'||s.type==='ancientTree'){ctx.fillStyle='#594435';ctx.fillRect(sx+w*.43,sy+h*.48,Math.max(7,w*.18),h*.5);for(let i=0;i<5;i++){ctx.fillStyle=['#20563a','#347c4b','#4f965b','#2b7045','#3c854c'][i];ctx.beginPath();ctx.arc(sx+w*(.18+(i%3)*.3),sy+h*(.28+Math.floor(i/3)*.18),Math.max(10,Math.min(w,h)*.28),0,Math.PI*2);ctx.fill();}}
+ else if(s.type==='rock'){ctx.fillStyle='#33384c';ctx.beginPath();ctx.moveTo(sx+2,sy+27);ctx.lineTo(sx+7,sy+8);ctx.lineTo(sx+21,sy+2);ctx.lineTo(sx+29,sy+19);ctx.lineTo(sx+24,sy+29);ctx.closePath();ctx.fill();ctx.fillStyle='#737990';ctx.fillRect(sx+9,sy+9,6,3);}
+ else if(s.type==='pillar'||s.type==='obelisk'){ctx.fillStyle='#4a4c43';ctx.fillRect(sx+3,sy+3,w-6,h-3);ctx.fillStyle='#c0b99a';ctx.fillRect(sx+6,sy+5,w-12,h-9);ctx.fillStyle='#8f8b72';ctx.fillRect(sx+3,sy+2,w-6,5);ctx.fillRect(sx+3,sy+h-6,w-6,5);if(s.type==='obelisk'){ctx.fillStyle='#a8e6ed';ctx.fillRect(sx+w*.4,sy+h*.2,4,h*.3);}}
+ else if(s.type==='pond'||s.type==='deepPool'||s.type==='starPool'){ctx.fillStyle='#243e45';roundRect(ctx,sx+2,sy+5,w-4,h-8,Math.min(18,TILE*.5));ctx.fill();ctx.fillStyle=s.type==='starPool'?'#444e91':'#397d91';ctx.beginPath();ctx.ellipse(sx+w/2,sy+h/2,w*.43,h*.38,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle=s.type==='starPool'?'#c5c7ff':'#89d8e4';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(sx+w/2,sy+h/2,w*.25,h*.16,-.15,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#d3f9ff';ctx.fillRect(sx+w*.3,sy+h*.38,4,2);ctx.fillRect(sx+w*.65,sy+h*.62,3,2);}
+ else if(s.type==='well'){ctx.fillStyle='#777d91';ctx.beginPath();ctx.ellipse(sx+w/2,sy+h/2,w*.43,h*.4,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#3d9bb0';ctx.beginPath();ctx.ellipse(sx+w/2,sy+h/2,w*.25,h*.22,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#c4cbdc';ctx.lineWidth=3;ctx.stroke();}
+ else if(s.type==='flowerbed'||s.type==='flowerPatch'||s.type==='starGarden'){ctx.fillStyle=s.type==='starGarden'?'#30385b':'#315f3f';ctx.fillRect(sx,sy,w,h);for(let i=0;i<Math.max(8,Math.floor(w*h/90));i++){const fx=sx+((i*37+13)%(Math.max(1,w-6)))+3,fy=sy+((i*23+9)%(Math.max(1,h-6)))+3;ctx.fillStyle=s.type==='starGarden'?(i%2?'#e0d2ff':'#73e7f5'):(i%2?'#f1c5e3':'#f7df8c');ctx.beginPath();ctx.arc(fx,fy,2.5,0,Math.PI*2);ctx.fill();}}
+ else if(s.type==='farm'){ctx.fillStyle='#795e42';ctx.fillRect(sx,sy,w,h);for(let yy=8;yy<h;yy+=12){ctx.strokeStyle='#b69055';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(sx+3,sy+yy);ctx.lineTo(sx+w-3,sy+yy);ctx.stroke();for(let xx=8;xx<w;xx+=14){ctx.fillStyle='#86b65d';ctx.fillRect(sx+xx,sy+yy-5,3,7);}}}
+ else if(s.type==='fence'){ctx.fillStyle='#5e4633';ctx.fillRect(sx,sy+h*.25,w,h*.15);ctx.fillRect(sx,sy+h*.65,w,h*.15);for(let xx=0;xx<w;xx+=18)ctx.fillRect(sx+xx,sy,4,h);}
+ else if(s.type==='orchard'){for(let i=0;i<Math.max(3,s.w);i++){const xx=sx+10+(i%4)*TILE,yy=sy+12+Math.floor(i/4)*TILE;ctx.fillStyle='#694630';ctx.fillRect(xx+8,yy+13,6,18);ctx.fillStyle=i%2?'#477746':'#5b9147';ctx.beginPath();ctx.arc(xx+11,yy+10,13,0,Math.PI*2);ctx.fill();ctx.fillStyle='#e4b466';ctx.fillRect(xx+5,yy+7,3,3);}}
+ else if(s.type==='mushroomGrove'){for(let i=0;i<8;i++){const xx=sx+8+(i*29)%(Math.max(1,w-16)),yy=sy+8+(i*17)%(Math.max(1,h-16));ctx.fillStyle='#ece1cf';ctx.fillRect(xx+3,yy+5,5,9);ctx.fillStyle=i%2?'#d86f75':'#c48bd6';ctx.beginPath();ctx.arc(xx+5,yy+5,6,Math.PI,Math.PI*2);ctx.fill();ctx.fillStyle='#fff1cf';ctx.fillRect(xx+3,yy+3,2,2);}}
+ else if(s.type==='fallenTree'){ctx.fillStyle='#63462f';ctx.beginPath();ctx.roundRect(sx,sy+h*.25,w,h*.5,8);ctx.fill();ctx.fillStyle='#a17a4c';ctx.beginPath();ctx.arc(sx+w-5,sy+h*.5,h*.22,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#d3a76a';ctx.stroke();}
+ else if(s.type==='stump'){ctx.fillStyle='#795639';ctx.beginPath();ctx.ellipse(sx+w/2,sy+h*.6,w*.42,h*.22,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#c6a16b';ctx.beginPath();ctx.ellipse(sx+w/2,sy+h*.58,w*.32,h*.13,0,0,Math.PI*2);ctx.fill();}
+ else if(s.type==='crystalCluster'||s.type==='crystalVein'||s.type==='stalagmites'){ctx.save();ctx.shadowColor='#68d8ff';ctx.shadowBlur=10;for(let i=0;i<7;i++){const xx=sx+5+(i*23)%(Math.max(1,w-12)),hh=12+(i*11)%Math.max(12,h*.8);ctx.fillStyle=i%2?'#668fe8':'#8be7f3';ctx.beginPath();ctx.moveTo(xx,sy+h-3);ctx.lineTo(xx+5,sy+h-hh);ctx.lineTo(xx+11,sy+h-3);ctx.closePath();ctx.fill();ctx.strokeStyle='#d8fbff';ctx.beginPath();ctx.moveTo(xx+5,sy+h-hh+3);ctx.lineTo(xx+6,sy+h-5);ctx.stroke();}ctx.restore();}
+ else if(s.type==='magma'){ctx.fillStyle='#2a2632';ctx.fillRect(sx,sy,w,h);ctx.strokeStyle='#ff824f';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(sx+3,sy+h*.8);ctx.lineTo(sx+w*.28,sy+h*.4);ctx.lineTo(sx+w*.45,sy+h*.55);ctx.lineTo(sx+w*.7,sy+h*.2);ctx.lineTo(sx+w-4,sy+h*.4);ctx.stroke();ctx.strokeStyle='#ffd18a';ctx.lineWidth=1;ctx.stroke();}
+ else if(s.type==='brokenWall'||s.type==='rubble'){ctx.fillStyle='#635f50';ctx.fillRect(sx,sy,w,h);for(let yy=3;yy<h;yy+=13)for(let xx=3;xx<w;xx+=17){ctx.fillStyle=(xx+yy)%2?'#96907a':'#4f5146';ctx.fillRect(sx+xx,sy+yy,13,7);}}
+ else if(s.type==='statue'||s.type==='shrine'||s.type==='starlightShrine'){ctx.fillStyle='#777e9c';ctx.fillRect(sx+w*.22,sy+h*.28,w*.56,h*.65);ctx.fillStyle=s.type==='starlightShrine'?'#b5a5ff':'#bbc5d6';ctx.beginPath();ctx.arc(sx+w/2,sy+h*.28,Math.max(5,w*.17),0,Math.PI*2);ctx.fill();ctx.fillStyle='#eef3ff';ctx.fillRect(sx+w*.4,sy+h*.25,3,3);ctx.fillRect(sx+w*.58,sy+h*.25,3,3);}
+ else if(s.type==='rift'){ctx.fillStyle='#17132a';ctx.beginPath();ctx.ellipse(sx+w/2,sy+h/2,w*.4,h*.47,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#b08dff';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(sx+w/2,sy+h/2,w*.3,h*.4,-.2,0,Math.PI*2);ctx.stroke();ctx.strokeStyle='#64d9ff';ctx.lineWidth=1;ctx.stroke();}
+ else if(s.type==='floatingRocks'){for(let i=0;i<6;i++){const xx=sx+((i*31+8)%(Math.max(1,w-12))),yy=sy+((i*23+7)%(Math.max(1,h-10)));ctx.fillStyle=i%2?'#777eb8':'#999ac9';ctx.beginPath();ctx.moveTo(xx,yy+9);ctx.lineTo(xx+5,yy);ctx.lineTo(xx+14,yy+4);ctx.lineTo(xx+10,yy+12);ctx.closePath();ctx.fill();}}
+ else if(s.type==='signpost'){ctx.fillStyle='#755139';ctx.fillRect(sx+w*.45,sy+h*.28,4,h*.7);ctx.fillStyle='#d8b576';ctx.fillRect(sx+w*.08,sy+h*.2,w*.84,9);ctx.fillStyle='#463b36';ctx.font='10px serif';ctx.fillText('➜',sx+w*.5,sy+h*.2+7);}
+ else if(s.type==='swampPool'){ctx.fillStyle='#273d36';ctx.beginPath();ctx.ellipse(sx+w/2,sy+h/2,w*.48,h*.43,.1,0,Math.PI*2);ctx.fill();ctx.fillStyle='#526e55';ctx.beginPath();ctx.ellipse(sx+w*.55,sy+h*.47,w*.34,h*.28,-.2,0,Math.PI*2);ctx.fill();ctx.fillStyle='#a5bd77';for(let i=0;i<5;i++){ctx.beginPath();ctx.arc(sx+8+(i*19)%(Math.max(1,w-12)),sy+10+(i*13)%(Math.max(1,h-12)),2,0,Math.PI*2);ctx.fill();}}
+ else if(s.type==='deadTree'){ctx.strokeStyle='#493d32';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(sx+w*.5,sy+h);ctx.lineTo(sx+w*.5,sy+h*.2);ctx.lineTo(sx+w*.2,sy+3);ctx.moveTo(sx+w*.5,sy+h*.45);ctx.lineTo(sx+w*.82,sy+2);ctx.stroke();ctx.lineWidth=1;}
+ else if(s.type==='bonePile'){ctx.fillStyle='#b9b7a3';for(let i=0;i<7;i++){const xx=sx+5+(i*17)%(Math.max(1,w-10)),yy=sy+6+(i*11)%(Math.max(1,h-10));ctx.save();ctx.translate(xx,yy);ctx.rotate(i*.45);ctx.fillRect(-7,-2,14,4);ctx.beginPath();ctx.arc(-7,0,3,0,Math.PI*2);ctx.arc(7,0,3,0,Math.PI*2);ctx.fill();ctx.restore();}}
+ else if(s.type==='fogVent'){ctx.fillStyle='#263d3a';ctx.beginPath();ctx.ellipse(sx+w/2,sy+h*.75,w*.42,h*.2,0,0,Math.PI*2);ctx.fill();for(let i=0;i<5;i++){ctx.strokeStyle=`rgba(201,226,204,${.4-i*.05})`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(sx+w*.5+(i-2)*6,sy+h*.4,5+i*2,Math.PI,Math.PI*2);ctx.stroke();}}
+ else if(s.type==='bridge'){ctx.fillStyle='#664930';ctx.fillRect(sx,sy,w,h);ctx.strokeStyle='#c69a63';for(let xx=sx+4;xx<sx+w;xx+=12){ctx.beginPath();ctx.moveTo(xx,sy+2);ctx.lineTo(xx,sy+h-2);ctx.stroke();}}
+ }}
+function drawNPC(n,camX,camY){const x=n.x*TILE-camX+16,y=n.y*TILE-camY+16;if(x<-20||y<-20||x>canvas.width+20||y>canvas.height+30)return;ctx.fillStyle='#0005';ctx.beginPath();ctx.ellipse(x,y+10,10,4,0,0,Math.PI*2);ctx.fill();ctx.fillStyle=n.color;ctx.beginPath();ctx.arc(x,y-3,11,0,Math.PI*2);ctx.fill();ctx.fillStyle='#20253a';ctx.beginPath();ctx.arc(x,y-7,7,0,Math.PI*2);ctx.fill();ctx.font='17px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(n.emoji,x,y+1);ctx.fillStyle='#fff';ctx.font='10px system-ui';ctx.lineWidth=3;ctx.strokeStyle='#172033';ctx.strokeText(n.name,x,y-20);ctx.fillText(n.name,x,y-20);}
+const DEFAULT_APPEARANCE={skin:'#efc39e',hair:'#493126',outfit:'#6f9fe6',pants:'#273e68',hairstyle:'short',accessory:'none'};
+function normalizeAppearance(a){const v={...DEFAULT_APPEARANCE,...(a||{})};if(!/^#[0-9a-f]{6}$/i.test(v.skin))v.skin=DEFAULT_APPEARANCE.skin;if(!/^#[0-9a-f]{6}$/i.test(v.hair))v.hair=DEFAULT_APPEARANCE.hair;if(!/^#[0-9a-f]{6}$/i.test(v.outfit))v.outfit=DEFAULT_APPEARANCE.outfit;if(!/^#[0-9a-f]{6}$/i.test(v.pants))v.pants=DEFAULT_APPEARANCE.pants;if(!['short','spiky','long','ponytail','bald'].includes(v.hairstyle))v.hairstyle='short';if(!['none','headband','crown','glasses'].includes(v.accessory))v.accessory='none';return v;}
+function drawAvatarSprite(target,x,y,opts={}){
+ const scale=opts.scale||1,dir=opts.direction||'down',job=opts.job||'knight',a=normalizeAppearance(opts.appearance);
+ const trims={knight:'#dce7f5',mage:'#8de0ff',assassin:'#e87891',cleric:'#fff0b5'},trim=trims[job]||'#dce7f5';
+ target.save();target.translate(x,y);target.scale(scale,scale);
+ // Shadow and rear ponytail/cape details.
+ target.fillStyle='rgba(0,0,0,.30)';target.beginPath();target.ellipse(0,10,9,3.2,0,0,Math.PI*2);target.fill();
+ if(dir==='up'&&job==='knight'){target.fillStyle=trim;target.beginPath();target.moveTo(-7,-1);target.lineTo(7,-1);target.lineTo(5,11);target.lineTo(0,14);target.lineTo(-5,11);target.closePath();target.fill();}
+ if(a.hairstyle==='ponytail'&&(dir==='up'||dir==='left'||dir==='right')){target.fillStyle=a.hair;target.beginPath();target.ellipse(dir==='left'?-7:-((dir==='right')?-7:0),-7,3.1,5.2,0,0,Math.PI*2);target.fill();}
+ // Legs and boots.
+ target.fillStyle=a.pants;target.fillRect(-5.5,4,4.5,8);target.fillRect(1,4,4.5,8);
+ target.fillStyle='#282d3e';target.fillRect(-6,10.5,5.2,5);target.fillRect(.8,10.5,5.2,5);
+ // Tunic / armor. The side views are deliberately narrower.
+ const side=dir==='left'||dir==='right';target.fillStyle=a.outfit;
+ if(side){target.fillRect(-5.5,-4,11,10);target.fillRect(dir==='left'?-7:4,-2,3,7);}else target.fillRect(-7,-4,14,11);
+ target.fillStyle=trim;
+ if(dir==='down'){target.fillRect(-1.6,-2,3.2,7);target.fillRect(-5.5,4,11,1.8);}
+ else if(dir==='up'){target.fillRect(-1,0,2,6);}
+ else {target.fillRect(dir==='left'?-4:2,-1,2,5);target.fillRect(-4,4,8,1.5);}
+ // Job-specific accent kept separate from the customizable main colors.
+ if(job==='mage'){target.fillStyle='#252643';target.fillRect(-7,-4,14,2);if(dir==='up')target.fillRect(-6,0,12,2);}
+ if(job==='assassin'){target.fillStyle='#242a39';target.fillRect(-7,-4,14,3);if(dir==='up'){target.fillStyle=trim;target.fillRect(-1,-1,2,7);}}
+ if(job==='cleric'){target.fillStyle=trim;target.fillRect(-7,-4,14,2);}
+ if(job==='knight'){target.fillStyle='#bcc9db';if(!side)target.fillRect(-8,-3,2,5);target.fillRect(5,-3,3,5);}
+ // Head.
+ const headY=-10.5;
+ if(dir==='up'){
+   if(a.hairstyle==='bald'){target.fillStyle=a.skin;target.beginPath();target.ellipse(0,headY,6.1,6.8,0,0,Math.PI*2);target.fill();}
+   else {target.fillStyle=a.hair;target.beginPath();target.ellipse(0,headY,6.8,7.2,0,0,Math.PI*2);target.fill();}
+   target.fillStyle=a.hair;
+   if(a.hairstyle==='long'){target.fillRect(-7,-14,3.5,13);target.fillRect(3.5,-14,3.5,13);}
+   else if(a.hairstyle==='ponytail'){target.beginPath();target.ellipse(0,-3,3,5,0,0,Math.PI*2);target.fill();}
+ }else{
+   target.fillStyle=a.skin;target.beginPath();target.ellipse(0,headY,6.2,6.7,0,0,Math.PI*2);target.fill();
+   if(a.hairstyle!=='bald'){
+    target.fillStyle=a.hair;
+    if(a.hairstyle==='spiky'){
+      target.beginPath();target.moveTo(-6.3,-10);target.lineTo(-7.5,-16);target.lineTo(-3.7,-14.1);target.lineTo(-1.4,-18);target.lineTo(1,-14.5);target.lineTo(4.2,-17);target.lineTo(4.8,-13.8);target.lineTo(7,-15);target.lineTo(6.1,-9.2);target.closePath();target.fill();
+    }else{
+      target.beginPath();target.ellipse(0,headY-2.1,6.6,4.8,0,Math.PI,Math.PI*2);target.fill();
+      if(a.hairstyle==='long'){target.fillRect(-6.2,-11,2.5,9);target.fillRect(3.7,-11,2.5,9);}
+      if(a.hairstyle==='ponytail'){target.fillRect(-6.2,-12,2.5,7);}
+    }
+   }
+   // Face features: two eyes from the front, one eye/nose in side profile.
+   target.fillStyle='#222638';
+   if(dir==='down'){target.fillRect(-3.4,-11,1.6,2.1);target.fillRect(1.8,-11,1.6,2.1);target.fillStyle='#fff0e5';target.fillRect(-1.5,-6.2,3,1);}
+   else {const sideSign=dir==='left'?-1:1;target.fillRect(sideSign*2.1-0.6,-11,1.3,2);target.fillStyle='#d99b7d';target.fillRect(sideSign*5.0,-9,1.6,1.5);}
+ }
+ // Accessories are visible from whichever angle makes sense.
+ if(a.accessory==='headband'&&dir!=='up'){target.fillStyle=trim;target.fillRect(-6,-13.5,12,2);}
+ if(a.accessory==='headband'&&dir==='up'){target.fillStyle=trim;target.fillRect(-6,-13,12,1.8);}
+ if(a.accessory==='crown'&&dir!=='up'){target.fillStyle='#f5c86a';target.beginPath();target.moveTo(-5.5,-14);target.lineTo(-5,-19);target.lineTo(-1.8,-16);target.lineTo(0,-20);target.lineTo(2,-16);target.lineTo(5,-19);target.lineTo(5.5,-14);target.closePath();target.fill();target.strokeStyle='#7d612b';target.lineWidth=.6;target.stroke();}
+ if(a.accessory==='glasses'&&dir==='down'){target.strokeStyle='#262f44';target.lineWidth=.8;target.strokeRect(-4.5,-12,4.2,3.2);target.strokeRect(.3,-12,4.2,3.2);target.beginPath();target.moveTo(-.3,-10.5);target.lineTo(.3,-10.5);target.stroke();}
+ target.restore();
+}
+let previewFacing='down',customizeOnly=false;
+function drawPlayer(camX,camY){const x=state.x*TILE-camX+16,y=state.y*TILE-camY+16;if(state.mount){ctx.save();ctx.font='29px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🦄',x,y+7);ctx.restore();drawAvatarSprite(ctx,x,y-6,{direction:state.facing||'down',job:state.job,appearance:state.appearance,scale:.78});}else{drawAvatarSprite(ctx,x,y,{direction:state.facing||'down',job:state.job,appearance:state.appearance,scale:1});}ctx.fillStyle='#fff';ctx.font='10px system-ui';ctx.textAlign='center';ctx.textBaseline='alphabetic';ctx.lineWidth=3;ctx.strokeStyle='#172033';ctx.strokeText(state.name,x,y-24);ctx.fillText(state.name,x,y-24);}
+function drawNodes(camX,camY){for(const n of nodeList()){const id=state.map+':'+n.id;if(state.harvested[id]||state.opened[id])continue;const x=n.x*TILE-camX+16,y=n.y*TILE-camY+16;if(x<-25||y<-25||x>canvas.width+25||y>canvas.height+25)continue;ctx.fillStyle='#0004';ctx.beginPath();ctx.ellipse(x,y+9,10,4,0,0,Math.PI*2);ctx.fill();if(n.type==='seal'){ctx.strokeStyle='#9bc8ff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,14,0,Math.PI*2);ctx.stroke();}if(n.type==='crystal'){ctx.shadowColor='#7bdcff';ctx.shadowBlur=14;}ctx.font='23px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(n.emoji,x,y);ctx.shadowBlur=0;}}
+function drawEnemies(camX,camY){for(const e of enemiesHere()){const x=e.x*TILE-camX+16,y=e.y*TILE-camY+16;if(x<-25||y<-25||x>canvas.width+25||y>canvas.height+25)continue;ctx.fillStyle='#0006';ctx.beginPath();ctx.ellipse(x,y+10,12,5,0,0,Math.PI*2);ctx.fill();if(e.boss){ctx.fillStyle='#cf5467';ctx.beginPath();ctx.arc(x,y,15,0,Math.PI*2);ctx.fill();}ctx.font=e.boss?'27px serif':'23px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(e.humanForm?'🧍':e.emoji,x,y);if(e.boss){ctx.fillStyle='#fff';ctx.font='10px system-ui';ctx.fillText('BOSS',x,y-25);}}}
+function drawMinimap(){
+ const w=miniCanvas.width,h=miniCanvas.height,cx=w/2,cy=h/2,r=WORLD_RADIUS*(w/WORLD_COLS);
+ miniCtx.clearRect(0,0,w,h);miniCtx.fillStyle='#101923';miniCtx.fillRect(0,0,w,h);
+ miniCtx.save();miniCtx.beginPath();miniCtx.arc(cx,cy,r,0,Math.PI*2);miniCtx.clip();
+ const sx=w/WORLD_COLS,sy=h/WORLD_ROWS;
+ // Sample every two world tiles for a crisp, fast circular atlas.
+ for(let y=0;y<WORLD_ROWS;y+=2){for(let x=0;x<WORLD_COLS;x+=2){if(!insideWorldCircle(x,y))continue;miniCtx.fillStyle=maps[regionAt(x,y)].base;miniCtx.fillRect(x*sx,y*sy,Math.max(1,2*sx),Math.max(1,2*sy));}}
+ // Show the roads radiating from the central village to each neighbouring region.
+ const vo=regionOrigin('village'),ax=(vo.x+COLS/2)*sx,ay=(vo.y+ROWS/2)*sy;
+ miniCtx.strokeStyle='#c6b080';miniCtx.lineWidth=2.2;miniCtx.lineCap='round';
+ for(const [key,off] of Object.entries(REGION_LAYOUT)){if(key==='village')continue;miniCtx.beginPath();miniCtx.moveTo(ax,ay);miniCtx.lineTo((off.x+COLS/2)*sx,(off.y+ROWS/2)*sy);miniCtx.stroke();}
+ for(const st of worldMapStructures){miniCtx.fillStyle=st.type==='pond'||st.type==='deepPool'||st.type==='starPool'||st.type==='swampPool'?'#51b9d1':st.type==='house'?'#ce9971':st.type==='tree'||st.type==='ancientTree'||st.type==='deadTree'?'#214f39':st.type==='rift'?'#ad86ff':st.type==='crystalCluster'||st.type==='crystalVein'?'#91eaff':'#a4a18b';miniCtx.fillRect(st.x*sx,st.y*sy,Math.max(1,st.w*sx),Math.max(1,st.h*sy));}
+ for(const n of nodeList()){if(state.harvested['world:'+n.id]||state.opened['world:'+n.id])continue;miniCtx.fillStyle='#ffd66f';miniCtx.fillRect(n.x*sx-1,n.y*sy-1,3,3);}
+ for(const e of enemiesHere()){miniCtx.fillStyle=e.boss?'#ff5d77':'#eaa0a7';miniCtx.fillRect(e.x*sx-1,e.y*sy-1,3,3);}
+ for(const n of(npcData.world||[])){miniCtx.fillStyle='#69e6dc';miniCtx.fillRect(n.x*sx-1,n.y*sy-1,3,3);}
+ miniCtx.fillStyle='#fff';miniCtx.strokeStyle='#172033';miniCtx.lineWidth=2;miniCtx.beginPath();miniCtx.arc(state.x*sx,state.y*sy,4,0,Math.PI*2);miniCtx.fill();miniCtx.stroke();
+ miniCtx.restore();miniCtx.strokeStyle='#c8d7ea';miniCtx.lineWidth=2.5;miniCtx.beginPath();miniCtx.arc(cx,cy,r,0,Math.PI*2);miniCtx.stroke();
+}
+
+function render(){const px=state.x*TILE+TILE/2,py=state.y*TILE+TILE/2;const camX=Math.max(0,Math.min(WORLD_COLS*TILE-canvas.width,px-canvas.width/2));const camY=Math.max(0,Math.min(WORLD_ROWS*TILE-canvas.height,py-canvas.height/2));ctx.clearRect(0,0,canvas.width,canvas.height);
+ const x0=Math.max(0,Math.floor(camX/TILE)),x1=Math.min(WORLD_COLS,Math.ceil((camX+canvas.width)/TILE)+1);const y0=Math.max(0,Math.floor(camY/TILE)),y1=Math.min(WORLD_ROWS,Math.ceil((camY+canvas.height)/TILE)+1);
+ for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)drawTile(x,y,x*TILE-camX,y*TILE-camY);
+ drawStructures(camX,camY);drawNodes(camX,camY);drawEnemies(camX,camY);for(const n of(npcData.world||[]))drawNPC(n,camX,camY);drawPlayer(camX,camY);ctx.save();ctx.strokeStyle='#a8bfd4';ctx.lineWidth=4;ctx.beginPath();ctx.arc(WORLD_COLS/2*TILE-camX,WORLD_ROWS/2*TILE-camY,WORLD_RADIUS*TILE,0,Math.PI*2);ctx.stroke();ctx.restore();drawMinimap();
+}
+function updateQuest(){let title='',desc='',progress=0,tag='메인';if(state.story===0){title='촌장과 대화하기';desc='별빛 마을의 촌장 김산에게 E 키로 말을 걸자.';progress=0;}else if(state.story===1){title='숲의 첫 임무';desc=`달빛 약초 4개를 모으고 풀잎 슬라임 3마리를 처치하자.\n약초 ${Math.min(4,state.herbs)}/4 · 슬라임 ${Math.min(3,state.slimesDefeated)}/3`;progress=(Math.min(4,state.herbs)/4+Math.min(3,state.slimesDefeated)/3)/2*100;}else if(state.story===2){title='수정 동굴의 비밀';desc=`윤준영을 쓰러뜨리고 달의 수정을 얻은 뒤 촌장에게 돌아가자.\n윤준영 ${state.flags.golem?'격파':'미격파'} · 수정 ${state.flags.crystal?'획득':'미획득'}`;progress=((state.flags.golem?1:0)+(state.flags.crystal?1:0))/2*100;}else if(state.story===3){title='고대 유적의 봉인';desc=`봉인 3개를 활성화하고 최재원을 쓰러뜨리자.\n봉인 ${state.sealCount}/3 · 최재원 ${state.flags.guardian?'격파':'미격파'}`;progress=(Math.min(3,state.sealCount)/3+(state.flags.guardian?1:0))/2*100;}else if(state.story===4){title='별의 성소';desc='별의 성소에서 최종 보스 김동혁을 물리치고 별의 심장을 되찾자.';progress=85;}else{title='별빛을 되찾았다!';desc='메인 스토리를 완수했다. 아직 열지 않은 상자와 남은 적을 찾아 자유롭게 탐험해 보자.';progress=100;tag='완료';}$('questTitle').textContent=title;$('questDesc').textContent=desc;$('questProgress').textContent=`진행도: ${Math.round(progress)}%`;$('questTag').textContent=tag;$('chapterChip').textContent=['프롤로그','1장 · 숲','2장 · 동굴','3장 · 유적','4장 · 성소','엔딩'][state.story]||'모험';}
+function updateUI(){ const job=JOBS[state.job]||JOBS.knight;$('jobName').textContent=job.name;$('jobIcon').textContent=job.emoji;$('jobSkill').textContent=`기술: ${job.skillName} (${job.skillCost} MP)`;$('jobSummary').textContent=job.description;$('jobPassive').textContent=`특성: ${job.passive}`;$('locationName').textContent=maps[currentRegion()].name;$('levelText').textContent=`Lv. ${state.level}`;$('hpText').textContent=`${state.hp} / ${state.maxHp}`;$('mpText').textContent=`${state.mp} / ${state.maxMp}`;$('hpBar').style.width=`${state.hp/state.maxHp*100}%`;$('mpBar').style.width=`${state.mp/state.maxMp*100}%`;$('xpBar').style.width=`${state.xp/(state.level*40)*100}%`;$('xpText').textContent=`${state.xp} / ${state.level*40} XP`;$('goldText').textContent=`${state.gold} G`;$('enemyCount').textContent=`처치 ${state.totalKills}`;$('inventory').innerHTML=[`🧪 회복약 ${state.potions}`,`🌿 약초 ${state.herbs}`,`💎 광석 ${state.ores}`,`🔷 수정 ${state.crystals}`,`✨ 비밀 발견 ${state.explorationFinds}`,`🏃 이동 속도 x${state.mount?'5.2':state.boots?'2.1':'1.0'}`,...(state.boots?['👢 풍령 부츠']:[]),...(state.mount?['🦄 달빛 유니콘 탑승 중']:[]),...(state.gachaWeaponName?[`⚔️ ${escapeHTML(state.gachaWeaponName)} +${state.gachaWeaponBonus} ATK`,`✨ ${escapeHTML(GACHA_WEAPON_ABILITY[state.gachaWeaponName]||'고유 효과 없음')}`]:[]),...(state.gachaArmorName?[`🛡️ ${escapeHTML(state.gachaArmorName)} +${state.gachaArmorBonus} DEF`,`✨ ${escapeHTML(GACHA_ARMOR_ABILITY[state.gachaArmorName]||'고유 효과 없음')}`]:[])].map(t=>`<span class="chip">${t}</span>`).join('');updateQuest();renderLog();render();}
+function renderLog(){$('log').innerHTML=state.log.length?state.log.map(t=>`<div>› ${escapeHTML(t)}</div>`).join(''):'<div>아직 기록이 없습니다. 모험을 시작하세요!</div>';}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+const SHOP_ITEMS=[
+ {id:'dagger',name:'초보자용 단검',icon:'🗡️',desc:'공격력 +2. 돈이 많지 않은 모험가에게 적합하다.',price:45},
+ {id:'sword',name:'강철 검',icon:'⚔️',desc:'공격력 +5. 오래 사용할 수 있는 튼튼한 검.',price:90},
+ {id:'mantle',name:'별빛 망토',icon:'🧥',desc:'방어력 +3. 받는 피해를 줄이는 데 도움이 된다.',price:80},
+ {id:'potions',name:'회복약 2개',icon:'🧪',desc:'한 개당 최대 HP의 30%와 MP 3 회복. 성직자는 HP 회복 효과가 25% 증가.',price:30},
+ {id:'boots',name:'풍령 부츠',icon:'👢',desc:'이동 속도가 기본보다 약 2.1배 빨라져요. 영구 사용 가능.',price:180},
+ {id:'mount',name:'달빛 유니콘 펫',icon:'🦄',desc:'직접 타고 다닐 수 있어요! 기본 이동보다 약 5.2배, 부츠보다 약 2.5배 빨라집니다.',price:650},
+ {id:'gacha',name:'별의 무기 뽑기 1회',icon:'🎰',desc:'120G 무기 뽑기: 녹슨 별검 35%(+3), 달빛 검 38.5%(+7), 용의 파쇄검 20%(+13, 적 공격 15% 패링), 전설의 별검 5%(+22, 명중 시 20% 확률로 2턴 수면), 흡혈의 검 1%(+30, 피해의 25% 회복), 처형의 별검 0.5%(+40, HP 25% 이하 적 즉사).',price:120},
+ {id:'armorGacha',name:'별의 방어구 뽑기 1회',icon:'🛡️',desc:'120G 방어구 뽑기: 별무늬 가죽 갑옷 35%(+2 DEF), 월영 경갑 38.5%(+5), 용린 갑주 20%(+9, 적 공격 15% 막기), 몽환의 외투 5%(+14, 피격 시 20% 확률로 2턴 수면 반격), 흡혈의 갑주 1%(+20, 받은 피해의 25% 회복), 불사조의 갑주 0.5%(+28, HP 25% 이하에서 치명타를 1회 버티고 회복).',price:120}
+];
+const GACHA_WEAPONS=[
+ {max:35,name:'녹슨 별검',emoji:'🗡️',rarity:'일반',bonus:3,ability:'고유 효과 없음'},
+ {max:73.5,name:'달빛 검',emoji:'🌙',rarity:'희귀',bonus:7,ability:'고유 효과 없음'},
+ {max:93.5,name:'용의 파쇄검',emoji:'🐉',rarity:'영웅',bonus:13,ability:'적의 각 공격을 15% 확률로 완전히 막음'},
+ {max:98.5,name:'전설의 별검',emoji:'🌟',rarity:'전설',bonus:22,ability:'공격 명중 시 20% 확률로 적을 2턴 동안 잠재움'},
+ {max:99.5,name:'흡혈의 검',emoji:'🩸',rarity:'신화',bonus:30,ability:'공격으로 준 피해의 25%만큼 HP 회복'},
+ {max:100,name:'처형의 별검',emoji:'☠️',rarity:'초월',bonus:40,ability:'공격 시 HP가 25% 이하인 적을 즉시 처치'}
+];
+const GACHA_WEAPON_ABILITY=Object.fromEntries(GACHA_WEAPONS.map(w=>[w.name,w.ability]));
+const GACHA_ARMORS=[
+ {max:35,name:'별무늬 가죽 갑옷',emoji:'🥋',rarity:'일반',bonus:2,ability:'고유 효과 없음'},
+ {max:73.5,name:'월영 경갑',emoji:'🌙',rarity:'희귀',bonus:5,ability:'고유 효과 없음'},
+ {max:93.5,name:'용린 갑주',emoji:'🐉',rarity:'영웅',bonus:9,ability:'적의 각 공격을 15% 확률로 완전히 막음'},
+ {max:98.5,name:'몽환의 외투',emoji:'💤',rarity:'전설',bonus:14,ability:'피격 시 20% 확률로 공격한 적을 2턴 동안 잠재움'},
+ {max:99.5,name:'흡혈의 갑주',emoji:'🩸',rarity:'신화',bonus:20,ability:'받은 피해의 25%만큼 HP 회복'},
+ {max:100,name:'불사조의 갑주',emoji:'🔥',rarity:'초월',bonus:28,ability:'현재 HP가 25% 이하일 때 치명적인 공격을 1회 버티고 최대 HP의 25%로 회복'}
+];
+const GACHA_ARMOR_ABILITY=Object.fromEntries(GACHA_ARMORS.map(a=>[a.name,a.ability]));
+function applyGachaWeaponHit(e,hit){
+ if(!e||!hit||hit.dodged||hit.damage<=0)return '';
+ let msg='';
+ if(state.gachaWeaponName==='전설의 별검'&&e.curHp>0&&Math.random()<.20){e.sleepTurns=Math.max(e.sleepTurns||0,2);msg+=' 💤 전설의 별검 발동! 적이 2턴 동안 잠들었다!';}
+ if(state.gachaWeaponName==='흡혈의 검'){
+  const wanted=Math.max(1,Math.floor(hit.damage*.25));
+  const heal=Math.min(wanted,state.maxHp-state.hp);
+  if(heal>0){state.hp+=heal;msg+=` 🩸 흡혈 발동! HP ${heal} 회복.`;}
+ }
+ return msg;
+}
+function shopItemOwned(item){return (item.id==='boots'&&state.boots)||(item.id==='mount'&&state.mount);}
+function renderShop(message='구매한 물건은 즉시 적용됩니다.'){
+ $('shopGold').textContent=`${state.gold} G`;
+ $('shopMessage').textContent=message;
+ $('shopItems').innerHTML=SHOP_ITEMS.map(item=>{
+  const owned=shopItemOwned(item),affordable=state.gold>=item.price;
+  const effects={dagger:'공격력 +2',sword:'공격력 +5',mantle:'방어력 +3',potions:'회복약 +2',boots:'이동 간격 135ms → 65ms',mount:'탑승 시 이동 간격 최대 26ms',gacha:'용의 파쇄검 20% · 전설의 별검 5% · 흡혈의 검 1% · 처형의 별검 0.5%',armorGacha:'용린 갑주 20% · 몽환의 외투 5% · 흡혈의 갑주 1% · 불사조의 갑주 0.5%'};
+  const effect=effects[item.id]||'';
+  const buttonLabel=owned?'보유 중':!affordable?'골드 부족':(['gacha','armorGacha'].includes(item.id)?'뽑기':'구매');
+  return `<div class="shop-item"><div class="shop-item-top"><div class="shop-item-icon">${item.icon}</div><div><div class="shop-item-name">${item.name}</div><div class="shop-item-desc">${item.desc}</div></div></div><div class="shop-item-bottom"><span class="shop-price">🪙 ${item.price} G</span><button type="button" data-buy-item="${item.id}" ${(affordable&&!owned)?'':'disabled'}>${buttonLabel}</button></div><div class="hint">효과: ${effect}${owned?' · 이미 보유 중':''}</div></div>`;
+ }).join('');
+}
+function shop(){
+ if(!$('startScreen').classList.contains('hidden')){toast('먼저 모험을 시작하세요.');return;}
+ if(state.inCombat){toast('전투 중에는 상점을 열 수 없어요.');return;}
+ if(!$('dialogOverlay').classList.contains('hidden'))$('dialogOverlay').classList.add('hidden');
+ renderShop();$('shopOverlay').classList.remove('hidden');
+}
+function buyShopItem(id){
+ const item=SHOP_ITEMS.find(it=>it.id===id);if(!item)return;
+ if(shopItemOwned(item)){renderShop('이미 보유한 장비예요.');return;}
+ if(state.gold<item.price){renderShop('골드가 부족해요. 몬스터 처치나 의뢰로 골드를 모아 보세요.');toast('골드가 부족해요.');return;}
+ state.gold-=item.price;
+ if(id==='gacha'){
+  const roll=Math.random()*100;
+  const prize=GACHA_WEAPONS.find(w=>roll<w.max)||GACHA_WEAPONS[GACHA_WEAPONS.length-1];
+  let resultMessage;
+  if(prize.bonus>state.gachaWeaponBonus){
+   const gain=prize.bonus-state.gachaWeaponBonus;
+   state.atk+=gain;state.gachaWeaponBonus=prize.bonus;state.gachaWeaponName=prize.name;
+   resultMessage=`🎉 ${prize.rarity} 등급 당첨! ${prize.emoji} ${prize.name}을(를) 장착했어요. 공격력 +${gain}!\n고유 효과: ${prize.ability}`;
+   addLog(`무기 뽑기 성공: ${prize.name} (${prize.rarity}) · 공격력 +${gain} · ${prize.ability}`);
+  }else{
+   const refund=30;state.gold+=refund;
+   resultMessage=`${prize.name} (${prize.rarity})이 나왔지만 현재 뽑기 무기보다 약해 분해했어요. 보상 ${refund}G를 돌려받았습니다.\n무기 효과: ${prize.ability}`;
+   addLog(`무기 뽑기: ${prize.name} 획득. 이미 더 강한 무기가 있어 분해하고 ${refund}G를 돌려받았다.`);
+  }
+  updateUI();renderShop(resultMessage);toast(resultMessage);return;
+ }
+ if(id==='armorGacha'){
+  const roll=Math.random()*100;
+  const prize=GACHA_ARMORS.find(a=>roll<a.max)||GACHA_ARMORS[GACHA_ARMORS.length-1];
+  let resultMessage;
+  if(prize.bonus>state.gachaArmorBonus){
+   const gain=prize.bonus-state.gachaArmorBonus;
+   state.def+=gain;state.gachaArmorBonus=prize.bonus;state.gachaArmorName=prize.name;
+   resultMessage=`🎉 ${prize.rarity} 등급 당첨! ${prize.emoji} ${prize.name}을(를) 장착했어요. 방어력 +${gain}!\n고유 효과: ${prize.ability}`;
+   addLog(`방어구 뽑기 성공: ${prize.name} (${prize.rarity}) · 방어력 +${gain} · ${prize.ability}`);
+  }else{
+   const refund=30;state.gold+=refund;
+   resultMessage=`${prize.name} (${prize.rarity})이 나왔지만 현재 방어구보다 약해 분해했어요. 보상 ${refund}G를 돌려받았습니다.\n방어구 효과: ${prize.ability}`;
+   addLog(`방어구 뽑기: ${prize.name} 획득. 이미 더 강한 방어구가 있어 분해하고 ${refund}G를 돌려받았다.`);
+  }
+  updateUI();renderShop(resultMessage);toast(resultMessage);return;
+ }
+ if(id==='dagger'){state.atk+=2;addLog('초보자용 단검을 구매했다. 공격력 +2');}
+ else if(id==='sword'){state.atk+=5;addLog('강철 검을 구매했다. 공격력 +5');}
+ else if(id==='mantle'){state.def+=3;addLog('별빛 망토를 구매했다. 방어력 +3');}
+ else if(id==='potions'){state.potions+=2;addLog('회복약 2개를 구매했다.');}
+ else if(id==='boots'){state.boots=true;addLog('풍령 부츠를 구매했다. 이동 속도가 약 2.1배 빨라졌다.');}
+ else if(id==='mount'){state.mount=true;addLog('달빛 유니콘 펫을 구매했다. 이제 타고 다니며 빠르게 이동할 수 있다!');}
+ updateUI();renderShop(`${item.name} 구매 완료! 효과가 즉시 적용됐어요.`);toast(`${item.name} 구매 완료!`);
+}
+function showStats(){const job=JOBS[state.job]||JOBS.knight;showDialog(`${state.name} · 능력치`,`직업: ${job.emoji} ${job.name}\n직업 기술: ${job.skillName} (${job.skillCost} MP)\n직업 특성: ${job.passive}\n레벨: ${state.level}\n공격력: ${state.atk}\n방어력: ${state.def}\n이동 속도: ${state.mount?'달빛 유니콘 (약 5.2배)':state.boots?'풍령 부츠 (약 2.1배)':'기본'}\n뽑기 무기: ${state.gachaWeaponName?`${state.gachaWeaponName} (+${state.gachaWeaponBonus} ATK)`:'없음'}\n무기 고유 효과: ${state.gachaWeaponName?(GACHA_WEAPON_ABILITY[state.gachaWeaponName]||'고유 효과 없음'):'없음'}\n뽑기 방어구: ${state.gachaArmorName?`${state.gachaArmorName} (+${state.gachaArmorBonus} DEF)`:'없음'}\n방어구 고유 효과: ${state.gachaArmorName?(GACHA_ARMOR_ABILITY[state.gachaArmorName]||'고유 효과 없음'):'없음'}\n불사조의 갑주 발동 여부: ${state.gachaArmorName==='불사조의 갑주'?(state.inCombat?(state.gachaArmorLastStandUsed?'이번 전투에서 발동함':'이번 전투에서 발동 가능'):'다음 전투에서 발동 가능'):'해당 장비 없음'}\n난이도: 강화된 도전 모드\n적 특수 공격: 연격·맹독·회피·흡혈·중갑·광폭화·강타\n최대 HP: ${state.maxHp}\n최대 MP: ${state.maxMp}\n처치한 몬스터: ${state.totalKills}\n탐험한 지역: ${Object.keys(state.visited).filter(k=>REGION_LAYOUT[k]).length}/6\n보조 의뢰: ${[state.side.herbDone,state.side.huntDone].filter(Boolean).length}/2`);}
+function rest(){if(currentRegion()!=='village'){showDialog('휴식','안전한 마을 여관에서만 쉴 수 있어. 하나로 연결된 세계 지도를 따라 마을로 돌아가자.');return;}state.hp=state.maxHp;state.mp=state.maxMp;addLog('여관에서 휴식했다. HP와 MP가 완전히 회복되었다.');toast('체력과 마나를 회복했어요.');updateUI();}
+function saveGame(){state.worldVersion=6;const payload={...state,enemy:null,inCombat:false,log:state.log.slice(0,9)};try{localStorage.setItem('starlightRPGSaveV1',JSON.stringify(payload));toast('저장 완료!');addLog('모험 진행 상황을 저장했다.');}catch(e){toast('이 브라우저에서는 저장할 수 없어요.');}}
+function loadGame(){try{
+ const raw=localStorage.getItem('starlightRPGSaveV1');if(!raw){toast('저장된 기록이 없어요.');return;}
+ const data=JSON.parse(raw);data.explorationFinds=data.explorationFinds||0;if(!JOBS[data.job])data.job='knight';const previousVersion=Number(data.worldVersion)||1;
+ const migrateKeys=obj=>{const out={};for(const [key,val] of Object.entries(obj||{})){const id=key.includes(':')?key.slice(key.indexOf(':')+1):key;out['world:'+id]=val;}return out;};
+ if(previousVersion<3){
+  const oldRegion=Object.prototype.hasOwnProperty.call(REGION_LAYOUT,data.map)?data.map:'village';let ox=Number(data.x)||27,oy=Number(data.y)||24;
+  if(previousVersion<2){ox=Math.round(ox*SCALE_X);oy=Math.round(oy*SCALE_Y);}
+  const off=regionOrigin(oldRegion);data.x=off.x+ox;data.y=off.y+oy;data.map='world';
+  data.defeated=migrateKeys(data.defeated);data.opened=migrateKeys(data.opened);data.harvested=migrateKeys(data.harvested);data.visited={...(data.visited||{}),[oldRegion]:true};
+ }else if(previousVersion===3){
+  const ox=Number(data.x)||28,oy=Number(data.y)||25;
+  const oldRegion=(oy<44?(ox<66?'village':ox<131?'forest':'cave'):(ox<66?'ruins':ox<131?'sanctum':'marsh'));
+  const oldOffsets={village:{x:1,y:1},forest:{x:66,y:1},cave:{x:131,y:1},ruins:{x:1,y:45},sanctum:{x:66,y:45},marsh:{x:131,y:45}};
+  const old=oldOffsets[oldRegion],localX=Math.max(2,Math.min(COLS-3,ox-old.x)),localY=Math.max(2,Math.min(ROWS-3,oy-old.y)),off=regionOrigin(oldRegion);
+  data.x=off.x+localX;data.y=off.y+localY;data.map='world';data.visited={...(data.visited||{}),[oldRegion]:true};
+ }
+ if(previousVersion<6){const oldMaxHp=Math.max(1,Number(data.maxHp)||150),oldMaxMp=Math.max(1,Number(data.maxMp)||24),hpRatio=Math.max(0,Math.min(1,(Number(data.hp)||1)/oldMaxHp)),mpRatio=Math.max(0,Math.min(1,(Number(data.mp)||0)/oldMaxMp));data.maxHp=Math.max(1,Math.round(oldMaxHp*.84));data.hp=Math.max(1,Math.min(data.maxHp,Math.round(data.maxHp*hpRatio)));data.maxMp=Math.max(1,Math.round(oldMaxMp*.90));data.mp=Math.max(0,Math.min(data.maxMp,Math.round(data.maxMp*mpRatio)));data.atk=Math.max(1,Math.round((Number(data.atk)||1)*.82));data.def=Math.max(0,Math.round((Number(data.def)||0)*.88));}
+ data.appearance=normalizeAppearance(data.appearance);data.boots=!!data.boots;data.mount=!!data.mount;data.gachaWeaponBonus=Math.max(0,Number(data.gachaWeaponBonus)||0);data.gachaWeaponName=typeof data.gachaWeaponName==='string'?data.gachaWeaponName:'';data.gachaArmorBonus=Math.max(0,Number(data.gachaArmorBonus)||0);data.gachaArmorName=typeof data.gachaArmorName==='string'?data.gachaArmorName:'';data.gachaArmorLastStandUsed=false;data.facing=['down','up','left','right'].includes(data.facing)?data.facing:'down';data.worldVersion=6;data.map='world';
+ if(!insideWorldCircle(Number(data.x),Number(data.y))){data.x=regionOrigin('village').x+COLS/2;data.y=regionOrigin('village').y+MID_Y;}
+ data.x=Math.max(1,Math.min(WORLD_COLS-2,Number(data.x)||144));data.y=Math.max(1,Math.min(WORLD_ROWS-2,Number(data.y)||144));data.visited={village:true,...(data.visited||{})};const loadedRegion=regionAt(data.x,data.y);if(!data.visited[loadedRegion])data.visited[loadedRegion]=true;
+ Object.assign(state,data);state.inCombat=false;state.enemy=null;state.guarding=false;state.guardTurns=0;state.guardBonus=0;$('startScreen').classList.add('hidden');addLog('저장된 모험을 불러왔다.');updateUI();toast('불러오기 완료!');
+ }catch(e){toast('저장 기록을 불러오지 못했어요.');}}
+
+function resetGame(){if(!confirm('현재 진행 상황을 지우고 새 게임을 시작할까요?'))return;location.reload();}
+function readAppearanceControls(){return normalizeAppearance({skin:$('heroSkin').value,hair:$('heroHair').value,outfit:$('heroOutfit').value,pants:$('heroPants').value,hairstyle:$('heroHairStyle').value,accessory:$('heroAccessory').value});}
+function writeAppearanceControls(a){const v=normalizeAppearance(a);$('heroSkin').value=v.skin;$('heroHair').value=v.hair;$('heroOutfit').value=v.outfit;$('heroPants').value=v.pants;$('heroHairStyle').value=v.hairstyle;$('heroAccessory').value=v.accessory;updateAvatarPreview();}
+function openAppearanceEditor(){if(!$('startScreen').classList.contains('hidden')){const el=$('avatarMaker');el.scrollIntoView({behavior:'smooth',block:'center'});return;}customizeOnly=true;$('heroName').value=state.name;$('heroJob').value=state.job;$('heroJob').disabled=true;writeAppearanceControls(state.appearance);$('startBtn').textContent='외형 적용';$('startScreen').classList.add('edit-only');$('startScreen').classList.remove('hidden');updateAvatarPreview();}
+function cancelAppearanceEditor(){customizeOnly=false;$('startScreen').classList.add('hidden');$('startScreen').classList.remove('edit-only');$('heroJob').disabled=false;$('heroName').style.display='';$('startBtn').textContent='모험 시작';}
+function startGame(){if(customizeOnly){state.appearance=readAppearanceControls();customizeOnly=false;$('startScreen').classList.add('hidden');$('startScreen').classList.remove('edit-only');$('heroJob').disabled=false;$('heroName').style.display='';$('startBtn').textContent='모험 시작';addLog('모험가의 외형을 변경했다.');updateUI();toast('외형을 적용했어요.');return;}state.name=($('heroName').value.trim()||'루나').slice(0,12);state.job=JOBS[$('heroJob').value]?$('heroJob').value:'knight';state.appearance=readAppearanceControls();state.facing='down';const job=JOBS[state.job];state.worldVersion=6;state.level=1;state.xp=0;state.maxHp=job.maxHp;state.hp=job.maxHp;state.maxMp=job.maxMp;state.mp=job.maxMp;state.atk=job.atk;state.def=job.def;state.gold=50;state.potions=3;state.boots=false;state.mount=false;state.gachaWeaponBonus=0;state.gachaWeaponName='';state.gachaArmorBonus=0;state.gachaArmorName='';state.gachaArmorLastStandUsed=false;state.map='world';state.x=regionOrigin('village').x+COLS/2;state.y=regionOrigin('village').y+MID_Y;if(!state.visited.village)state.visited.village=true;$('startScreen').classList.add('hidden');addLog(`${state.name}, ${job.name}으로 모험을 시작했다.`);updateUI();showDialog('모험의 시작',`${state.name}, ${job.emoji} ${job.name}으로 별빛 마을에 도착했어. 촌장 김산과 이야기해 보자.\n\n플레이어가 약해졌으니 공격 기술과 회복약을 아껴 쓰고, 적 특성에 맞춰 방어와 회복 타이밍을 정하는 게 중요해!`);} 
+
+// Input: discrete steps; boots and the rideable pet increase actual movement speed.
+function getMoveInterval(){return state.mount?26:state.boots?65:135;}
+let lastMove=0;const held=new Set();window.addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' ','Space'].includes(e.key))e.preventDefault();if(e.repeat&&['e','E',' ','Space'].includes(e.key))return;if(e.key==='e'||e.key==='E'||e.key===' '||e.key==='Space'){if($('startScreen').classList.contains('hidden')&&!state.inCombat&&$('dialogOverlay').classList.contains('hidden')&&$('shopOverlay').classList.contains('hidden'))interact();return;}if(e.key==='Escape'){if(!$('shopOverlay').classList.contains('hidden'))$('shopOverlay').classList.add('hidden');else if(!$('dialogOverlay').classList.contains('hidden'))$('dialogOverlay').classList.add('hidden');return;}held.add(e.key.toLowerCase());});window.addEventListener('keyup',e=>held.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>held.clear());function inputLoop(t){if(t-lastMove>getMoveInterval()&&$('startScreen').classList.contains('hidden')&&state.inCombat===false&&$('dialogOverlay').classList.contains('hidden')&&$('shopOverlay').classList.contains('hidden')){let key=null;if(held.has('arrowup')||held.has('w'))key='up';else if(held.has('arrowdown')||held.has('s'))key='down';else if(held.has('arrowleft')||held.has('a'))key='left';else if(held.has('arrowright')||held.has('d'))key='right';if(key){move(key==='left'?-1:key==='right'?1:0,key==='up'?-1:key==='down'?1:0);lastMove=t;}}requestAnimationFrame(inputLoop);}requestAnimationFrame(inputLoop);
+document.querySelectorAll('[data-move]').forEach(btn=>{let interval=null;const start=()=>{const dir=btn.dataset.move;const fn=()=>move(dir==='left'?-1:dir==='right'?1:0,dir==='up'?-1:dir==='down'?1:0);fn();interval=setInterval(fn,getMoveInterval());};const stop=()=>{clearInterval(interval);interval=null;};btn.addEventListener('pointerdown',e=>{e.preventDefault();start();});['pointerup','pointerleave','pointercancel'].forEach(ev=>btn.addEventListener(ev,stop));});
+function updateJobPreview(){const job=JOBS[$('heroJob').value]||JOBS.knight;$('jobDescription').textContent=`${job.description} 기술: ${job.skillName} (${job.skillCost} MP).`; $('jobTraits').innerHTML=job.traits.map(t=>`<span>${escapeHTML(t)}</span>`).join('');}
+$('heroJob').addEventListener('change',()=>{updateJobPreview();updateAvatarPreview();});updateJobPreview();
+function updateAvatarPreview(){const pc=$('avatarPreview');if(!pc)return;const pctx=pc.getContext('2d');pctx.clearRect(0,0,pc.width,pc.height);const bg=pctx.createLinearGradient(0,0,pc.width,pc.height);bg.addColorStop(0,'#263854');bg.addColorStop(1,'#141b2d');pctx.fillStyle=bg;pctx.fillRect(0,0,pc.width,pc.height);pctx.strokeStyle='#ffffff12';pctx.lineWidth=1;for(let x=12;x<pc.width;x+=20){pctx.beginPath();pctx.moveTo(x,0);pctx.lineTo(x,pc.height);pctx.stroke();}for(let y=10;y<pc.height;y+=20){pctx.beginPath();pctx.moveTo(0,y);pctx.lineTo(pc.width,y);pctx.stroke();}pctx.fillStyle='#0004';pctx.beginPath();pctx.ellipse(pc.width/2,151,28,7,0,0,Math.PI*2);pctx.fill();const job=JOBS[$('heroJob').value]?$('heroJob').value:(state.job||'knight');drawAvatarSprite(pctx,pc.width/2,137,{direction:previewFacing,job,appearance:readAppearanceControls(),scale:2.15});$('avatarViewLabel').textContent=({down:'앞모습',left:'왼쪽 모습',right:'오른쪽 모습',up:'뒷모습'})[previewFacing];document.querySelectorAll('[data-preview-facing]').forEach(b=>b.classList.toggle('view-active',b.dataset.previewFacing===previewFacing));}
+['heroSkin','heroHair','heroOutfit','heroPants','heroHairStyle','heroAccessory'].forEach(id=>$(id).addEventListener('input',updateAvatarPreview));
+document.querySelectorAll('[data-preview-facing]').forEach(btn=>btn.addEventListener('click',()=>{previewFacing=btn.dataset.previewFacing;updateAvatarPreview();}));
+$('appearanceBtn').addEventListener('click',openAppearanceEditor);$('cancelAppearanceBtn').addEventListener('click',cancelAppearanceEditor);writeAppearanceControls(DEFAULT_APPEARANCE);updateAvatarPreview();
+$('interactMobile').addEventListener('click',interact);$('potionMobile').addEventListener('click',()=>{if(state.inCombat){playerAction('potion');}else if(state.potions>0){if(state.hp===state.maxHp&&state.mp===state.maxMp){toast('이미 충분히 회복했어요.');return;}state.potions--;const potionFactor=state.job==='cleric'?1.25:1;const h=Math.min(Math.ceil(state.maxHp*.30*potionFactor),state.maxHp-state.hp);state.hp+=h;const m=Math.min(3,state.maxMp-state.mp);state.mp+=m;toast(`회복약 사용: HP +${h}, MP +${m}`);updateUI();}else toast('회복약이 없어요.');});$('menuMobile').addEventListener('click',showStats);$('saveBtn').addEventListener('click',saveGame);$('loadBtn').addEventListener('click',loadGame);$('resetBtn').addEventListener('click',resetGame);$('startBtn').addEventListener('click',startGame);$('shopBtn').addEventListener('click',shop);$('shopCloseBtn').addEventListener('click',()=>$('shopOverlay').classList.add('hidden'));$('shopOverlay').addEventListener('click',e=>{if(e.target===$('shopOverlay'))$('shopOverlay').classList.add('hidden');});$('shopItems').addEventListener('click',e=>{const btn=e.target.closest('[data-buy-item]');if(btn&&!btn.disabled)buyShopItem(btn.dataset.buyItem);});$('statusBtn').addEventListener('click',showStats);$('restBtn').addEventListener('click',rest);
+$('attackBtn').addEventListener('click',()=>playerAction('attack'));$('skillBtn').addEventListener('click',()=>playerAction('skill'));$('potionBtn').addEventListener('click',()=>playerAction('potion'));$('defendBtn').addEventListener('click',()=>playerAction('defend'));$('runBtn').addEventListener('click',()=>playerAction('run'));$('battleCloseBtn').addEventListener('click',closeBattle);
+// A little visual status update on region-specific tips.
+function updateTip(){const region=currentRegion();const tips={
+ village:'별빛 마을: 촌장 김산에게 말을 걸어 모험을 시작하고, 상인 은찬에게 장비·풍령 부츠·탑승 펫을 구매하거나 무기·방어구 뽑기에 도전하세요.',
+ forest:'속삭임 숲: 약초와 버섯을 모으고, 거목과 연못 주변을 살펴보세요.',
+ cave:'수정 동굴: 수정 광맥과 지하 호수, 마그마 지대에 보물과 강한 적이 숨어 있어요.',
+ ruins:'잊힌 유적: 부서진 벽과 석상 주변을 탐험하고 고대 봉인 세 개를 활성화하세요.',
+ sanctum:'별의 성소: 별빛 정원과 공허의 균열을 지나 최종 보스 김동혁에게 도전하세요.',
+ marsh:'저주받은 습지: 늪의 수문장과 맞서고, 은둔자의 주변에서 유물과 별빛 샘을 찾아보세요.'};$('tipText').textContent=tips[region]||tips.village;}
+const oldUpdate=updateUI; // Keep tips synchronized with every location and status update.
+// Reassign wrapper after declarations so all event handlers use the full version.
+updateUI=function(){oldUpdate();updateTip();};
+// Initialize screen without starting the adventure.
+updateUI();addLog('별빛 마을의 바람이 조용히 불어온다.');
+})();
+</script>
+</body>
+</html>
